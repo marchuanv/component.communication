@@ -28,5 +28,38 @@ module.exports = {
         //     });
         // }
     }, 
-    register: ()=>{}
+    register: ({ publicHost, publicPort, privatePort, path, security, callback })=>{}
 };
+
+
+// const requestListener = async ({ privatePort }) => {
+//     const http = require('http');
+//     const httpServer = http.createServer();
+//     httpServer.on("request", (request, response)=>{
+//         let body = '';
+//         request.on('data', chunk => {
+//             body += chunk.toString();
+//         });
+//         request.on('end', async () => {
+//             let res = { headers: {} };
+//             const host = request.headers["host"].split(":")[0];
+//             const port = Number(request.headers["host"].split(":")[1]) || 80;
+//             const { fromhost } = request.headers;
+//             try {
+//                 logging.write("Receiving Request",`received request for ${request.url} from ${fromhost || "unknown"}`);
+//                 res = await requestHandler.callback({ host, port, path: request.url, headers: request.headers, data: body });
+//             } catch(err) {
+//                 logging.write("Receiving Request"," ", err.toString());
+//                 const message = "Internal Server Error";
+//                 res.statusCode = 500;
+//                 res.statusMessage = message;
+//                 res.headers = { "Content-Type":"text/plain", "Content-Length": Buffer.byteLength(message) };
+//                 res.data = message;
+//             } finally {
+//                 response.writeHead( res.statusCode, res.statusMessage, res.headers).end(res.data);
+//             }
+//         });
+//     });
+//     httpServer.listen(privatePort);
+//     logging.write("Request Listener", `listening on port ${privatePort}`);
+// };
