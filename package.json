@@ -1,0 +1,27 @@
+{
+  "name": "component.request.handler",
+  "version": "1.0.0",
+  "description": "module for handling most types of requests over a network",
+  "main": "component.request.handler.js",
+  "engines": {
+    "node": "12.16.1",
+    "npm": "6.13.4"
+  },
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marchuanv/component.request.handler.git"
+  },
+  "author": "Marchuan Van Der Merwe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marchuanv/component.request.handler/issues"
+  },
+  "homepage": "https://github.com/marchuanv/component.request.handler#readme",
+  "dependencies": {
+    "component.request.handler.secure": "git+https://github.com/marchuanv/component.request.handler.secure.git",
+    "logging": "git+https://github.com/marchuanv/logging.git"
+  }
+}
