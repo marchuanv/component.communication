@@ -28,9 +28,8 @@ module.exports = {
                                     logging.write("Request Handler"," ", error.toString());
                                     response.writeHead( 500, "Internal Server Error").end();
                                 });
-                            }else {
-                                response.writeHead( results.statusCode, results.statusMessage, results.headers).end(results.data);
                             }
+                            response.writeHead( results.statusCode, results.statusMessage, results.headers).end(results.data);
                         } catch {
                             response.writeHead( 500, "Internal Server Error").end();
                         }
