@@ -4,12 +4,12 @@ const utils = require("utils");
 const net = require('net')
 module.exports = {
     servers: [],
-    port: ({ privatePort }) => {
+    port: ({ port }) => {
         return new Promise((resolve)=>{
-            let server = module.exports.servers.find(s=>s.port === privatePort);
+            let server = module.exports.servers.find(s=>s.port === port);
             if (!server){
                 const instance = http.createServer();
-                server = { port: privatePort, instance, started: false };
+                server = { port, instance, started: false };
                 module.exports.servers.push(server);
             }
             server.instance.removeAllListeners("request");
@@ -37,9 +37,9 @@ module.exports = {
                 });
             });
             if (server.started===false){
-                server.instance.listen(privatePort);
+                server.instance.listen(port);
                 server.started = true;
-                logging.write("Request Handler", `listening on port ${privatePort}`);
+                logging.write("Request Handler", `listening on port ${port}`);
             }
             const count = server.instance.listeners("request").length;
             logging.write("Request Handler",`http request event count: ${count}`);
