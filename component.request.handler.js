@@ -20,6 +20,18 @@ module.exports = {
                 });
                 request.on('end', () => {
                     logging.write("Request Handler",`received request for ${request.url}`);
+                    
+                    const defaultHeaders = {
+                        "Access-Control-Allow-Origin": "*",
+                        "Access-Control-Expose-Headers": "*",
+                        "Access-Control-Allow-Headers": "*",
+                        "Content-Type": "text/plain"
+                    };
+                    const isPreflight = request.headers["access-control-request-headers"] !== undefined;
+                    if(isPreflight){
+                        return response.writeHead( 200, "Success", defaultHeaders ).end("");
+                    }
+
                     resolve({ handle: async (callback) => {
                         try {
                             let results = callback({  path: request.url, headers: request.headers, data: body });
