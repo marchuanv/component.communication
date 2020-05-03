@@ -19,20 +19,20 @@ module.exports = {
                     body += chunk.toString();
                 });
                 request.on('end', () => {
-                    const host = request.headers["host"].split(":")[0];
-                    const port = Number(request.headers["host"].split(":")[1]) || 80;
-                    const { fromhost } = request.headers;
-                    logging.write("Request Handler",`received request for ${request.url} from ${fromhost || "unknown"}`);
-                    resolve({ handle: (callback) => {
-                        let results = callback({ host, port, path: request.url, headers: request.headers, data: body });
-                        if (results && results.then){
-                            results.then(({ statusCode, statusMessage, headers, data })=>{
-                                response.writeHead( statusCode, statusMessage, headers).end(data);
-                            }).catch((error)=>{
-                                logging.write("Request Handler"," ", error.toString());
-                            });
-                        }else {
-                            response.writeHead( results.statusCode, results.statusMessage, results.headers).end(results.data);
+                    logging.write("Request Handler",`received request for ${request.url}`);
+                    resolve({ handle: async (callback) => {
+                        try {
+                            let results = callback({  path: request.url, headers: request.headers, data: body });
+                            if (results && results.then){
+                                results = await results.catch((error)=>{
+                                    logging.write("Request Handler"," ", error.toString());
+                                    response.writeHead( 500, "Internal Server Error").end();
+                                });
+                            }else {
+                                response.writeHead( results.statusCode, results.statusMessage, results.headers).end(results.data);
+                            }
+                        } catch {
+                            response.writeHead( 500, "Internal Server Error").end();
                         }
                     }});
                 });
