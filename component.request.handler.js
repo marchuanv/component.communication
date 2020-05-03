@@ -1,65 +1,49 @@
 const http = require("http");
 const logging = require("logging");
 const utils = require("utils");
-const componentRequestHandlerSecure = require("component.request.handler.secure");
-module.exports = { 
-    callback: async ({ host, port, path, headers, data })=>{
-
-       return await componentRequestHandlerSecure.callback({ host, port, path, requestHeaders: headers, requestData: data });
-
-        // callback: ({data, fromhost, fromport }) => {
-        //     return new Promise(async (resolve) => {
-        //         let tryCount = 0;
-        //         const id = setInterval(() => {
-        //             tryCount = tryCount + 1;
-        //             const results = await requestHandlers.getResults()
-        //             if (){
-        //                 clearInterval(id);
-        //                 results.statusCode = 200;
-        //                 resolve(results);
-        //             } else if (tryCount === 3) {
-        //                 clearInterval(id);
-        //                 logging.write("Server Request",`deferring ${requestUrl} request`);
-        //                 resolve({ data: "Request Deferred", contentType: "text/plain", statusCode: 202 });
-        //                 await requestHandlers.defer({ publicHost, publicPort, privateHost, privatePort, path: request.url }, { data, fromhost, fromport });
-        //             }
-        //         }, 1000);
-                
-        //     });
-        // }
-    }, 
-    register: ({ publicHost, publicPort, privatePort, path, security, callback })=>{}
+const net = require('net')
+module.exports = {
+    servers: [],
+    handle: ({ privatePort }) => {
+        return new Promise((resolve)=>{
+            let server = module.exports.servers.find(s=>s.port === privatePort);
+            if (!server){
+                const instance = http.createServer();
+                server = { port: privatePort, instance, started: false };
+                module.exports.servers.push(server);
+            }
+            server.instance.removeAllListeners("request");
+            server.instance.on("request", (request, response)=>{
+                let body = '';
+                request.on('data', chunk => {
+                    body += chunk.toString();
+                });
+                request.on('end', () => {
+                    const host = request.headers["host"].split(":")[0];
+                    const port = Number(request.headers["host"].split(":")[1]) || 80;
+                    const { fromhost } = request.headers;
+                    logging.write("Request Handler",`received request for ${request.url} from ${fromhost || "unknown"}`);
+                    resolve({ receive: (callback) => {
+                        let results = callback({ host, port, path: request.url, headers: request.headers, data: body });
+                        if (results && results.then){
+                            results.then(({ statusCode, statusMessage, headers, data })=>{
+                                response.writeHead( statusCode, statusMessage, headers).end(data);
+                            }).catch((error)=>{
+                                logging.write("Request Handler"," ", error.toString());
+                            });
+                        }else {
+                            response.writeHead( results.statusCode, results.statusMessage, results.headers).end(results.data);
+                        }
+                    }});
+                });
+            });
+            if (server.started===false){
+                server.instance.listen(privatePort);
+                server.started = true;
+                logging.write("Request Handler", `listening on port ${privatePort}`);
+            }
+            const count = server.instance.listeners("request").length;
+            logging.write("Request Handler",`http request event count: ${count}`);
+        });
+    }
 };
-
-
-// const requestListener = async ({ privatePort }) => {
-//     const http = require('http');
-//     const httpServer = http.createServer();
-//     httpServer.on("request", (request, response)=>{
-//         let body = '';
-//         request.on('data', chunk => {
-//             body += chunk.toString();
-//         });
-//         request.on('end', async () => {
-//             let res = { headers: {} };
-//             const host = request.headers["host"].split(":")[0];
-//             const port = Number(request.headers["host"].split(":")[1]) || 80;
-//             const { fromhost } = request.headers;
-//             try {
-//                 logging.write("Receiving Request",`received request for ${request.url} from ${fromhost || "unknown"}`);
-//                 res = await requestHandler.callback({ host, port, path: request.url, headers: request.headers, data: body });
-//             } catch(err) {
-//                 logging.write("Receiving Request"," ", err.toString());
-//                 const message = "Internal Server Error";
-//                 res.statusCode = 500;
-//                 res.statusMessage = message;
-//                 res.headers = { "Content-Type":"text/plain", "Content-Length": Buffer.byteLength(message) };
-//                 res.data = message;
-//             } finally {
-//                 response.writeHead( res.statusCode, res.statusMessage, res.headers).end(res.data);
-//             }
-//         });
-//     });
-//     httpServer.listen(privatePort);
-//     logging.write("Request Listener", `listening on port ${privatePort}`);
-// };
