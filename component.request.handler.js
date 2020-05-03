@@ -4,7 +4,7 @@ const utils = require("utils");
 const net = require('net')
 module.exports = {
     servers: [],
-    handle: ({ privatePort }) => {
+    port: ({ privatePort }) => {
         return new Promise((resolve)=>{
             let server = module.exports.servers.find(s=>s.port === privatePort);
             if (!server){
@@ -23,7 +23,7 @@ module.exports = {
                     const port = Number(request.headers["host"].split(":")[1]) || 80;
                     const { fromhost } = request.headers;
                     logging.write("Request Handler",`received request for ${request.url} from ${fromhost || "unknown"}`);
-                    resolve({ receive: (callback) => {
+                    resolve({ handle: (callback) => {
                         let results = callback({ host, port, path: request.url, headers: request.headers, data: body });
                         if (results && results.then){
                             results.then(({ statusCode, statusMessage, headers, data })=>{
