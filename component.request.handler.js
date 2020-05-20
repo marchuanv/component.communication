@@ -1,7 +1,6 @@
 const http = require("http");
 const logging = require("logging");
-const utils = require("utils");
-const net = require('net')
+logging.config([ "Request Handler" ]);
 module.exports = {
     servers: [],
     port: ({ port }) => {
