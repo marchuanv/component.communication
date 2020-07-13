@@ -7,7 +7,8 @@ module.exports = {
     handle: ({ callingModule, port }) => {
         let instance = module.exports.instances.find(s => s.port === port);
         if (!instance){
-            instance= http.createServer();
+            instance = http.createServer();
+            instance.port = port;
             module.exports.instances.push(instance);
         }
         instance.removeAllListeners("request");
