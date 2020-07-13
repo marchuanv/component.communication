@@ -4,7 +4,7 @@ const logging = require("logging");
 logging.config.add("Request Handler");
 module.exports = {
     instances: [],
-    handle: ({ callingModule, port }) => {
+    handle: (callingModule, { port }) => {
         let instance = module.exports.instances.find(s => s.port === port);
         if (!instance){
             instance = http.createServer();
