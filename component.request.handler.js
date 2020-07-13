@@ -11,7 +11,7 @@ module.exports = {
             instance.port = port;
             module.exports.instances.push(instance);
         }
-        instance.removeAllListeners("request");
+        // instance.removeAllListeners("request");
         instance.on("request", (request, response)=>{
             let body = '';
             request.on('data', chunk => {
