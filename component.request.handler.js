@@ -28,17 +28,11 @@ module.exports = {
                 if(isPreflight){
                     return response.writeHead( 200, "Success", defaultHeaders ).end("");
                 }
-                try {
-                    let results = delegate.call(callingModule, { path: request.url, headers: request.headers, data: body });
-                    if (results && results.then){
-                        results = await results.catch((error)=>{
-                            logging.write("Request Handler"," ", error.toString());
-                            response.writeHead( 500, "Internal Server Error").end();
-                        });
-                    }
-                    response.writeHead( results.statusCode, results.statusMessage, results.headers).end(results.data);
-                } catch {
+                let results = await delegate.call(callingModule, { path: request.url, headers: request.headers, data: body });
+                if (results.error){
                     response.writeHead( 500, "Internal Server Error").end();
+                } else {
+                    response.writeHead( results.statusCode, results.statusMessage, results.headers).end(results.data);
                 }
             });
         });
