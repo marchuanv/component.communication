@@ -29,7 +29,7 @@ module.exports = {
                 if(isPreflight){
                     return response.writeHead( 200, "Success", defaultHeaders ).end("");
                 }
-                let results = await delegate.call(callingModule, { path: request.url, headers: request.headers, data: body, port });
+                let results = await delegate.call(callingModule, { path: request.url, headers: request.headers, data: body, port, host});
                 if (results.error){
                     response.writeHead( 500, "Internal Server Error").end();
                 } else {
