@@ -4,7 +4,11 @@ const logging = require("logging");
 logging.config.add("Request Handler");
 module.exports = {
     instances: [],
+<<<<<<< HEAD
+    handle: ({ callingModule, host, port }) => {
+=======
     handle: (callingModule, { port }) => {
+>>>>>>> 79c22f2453904225167f2494685020168e8a4d5b
         let instance = module.exports.instances.find(s => s.port === port);
         if (!instance){
             instance = http.createServer();
@@ -40,11 +44,10 @@ module.exports = {
         if (instance.listening === false){
             if (host){
                 instance.listen({ host, port });
-                logging.write("Request Handler", `listening on ${host}:${port}`);
             } else {
                 instance.listen({ port });
-                logging.write("Request Handler", `listening on port ${port}`);
             }
+            logging.write("Request Handler", `listening on port ${port}`);
         }
         const count = instance.listeners("request").length;
         logging.write("Request Handler",`http request event count: ${count}`);
