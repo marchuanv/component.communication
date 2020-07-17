@@ -4,11 +4,11 @@ const logging = require("logging");
 logging.config.add("Request Handler");
 module.exports = {
     instances: [],
-    handle: (callingModule, { host, port }) => {
-        let instance = module.exports.instances.find(s => s.port === port);
+    handle: (callingModule, options) => {
+        let instance = module.exports.instances.find(s => s.port === options.privatePort);
         if (!instance){
             instance = http.createServer();
-            instance.port = port;
+            instance.port = options.privatePort;
             module.exports.instances.push(instance);
         }
         instance.removeAllListeners("request");
@@ -29,7 +29,13 @@ module.exports = {
                 if(isPreflight){
                     return response.writeHead( 200, "Success", defaultHeaders ).end("");
                 }
-                let results = await delegate.call(callingModule, { path: request.url, headers: request.headers, data: body, port, host});
+                let results = await delegate.call(callingModule, { 
+                    path: request.url, 
+                    headers: request.headers, 
+                    data: body, 
+                    privatePort: options.privateHost, 
+                    privatePort: options.privatePort
+                });
                 if (results.error){
                     response.writeHead( 500, "Internal Server Error").end();
                 } else {
@@ -38,12 +44,12 @@ module.exports = {
             });
         });
         if (instance.listening === false){
-            if (host){
-                instance.listen({ host, port });
-                logging.write("Request Handler", `listening on ${host}:${port}`);
+            if (options.privateHost){
+                instance.listen({ host: options.privateHost, port: options.privatePort });
+                logging.write("Request Handler", `listening on ${options.privateHost}:${options.privatePort}`);
             } else {
-                instance.listen({ port });
-                logging.write("Request Handler", `listening on port ${port}`);
+                instance.listen({ port: options.privatePort });
+                logging.write("Request Handler", `listening on port ${options.privatePort}`);
             }
         }
         const count = instance.listeners("request").length;
