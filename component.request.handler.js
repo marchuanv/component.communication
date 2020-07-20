@@ -37,6 +37,7 @@ module.exports = {
                     privatePort: options.privatePort
                 });
                 if (results.headers){
+                    delete results.headers["Content-Length"];
                     results.headers["content-length"] = Buffer.byteLength(results.data);
                 }
                 if (results.error){
