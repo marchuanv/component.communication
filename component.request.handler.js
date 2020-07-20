@@ -38,7 +38,7 @@ module.exports = {
                 });
                 if (results.headers){
                     delete results.headers["Content-Length"];
-                    results.headers["content-length"] = Buffer.byteLength(results.data);
+                    results.headers["content-length"] = Buffer.byteLength(results.data || "");
                 }
                 if (results.error){
                     response.writeHead( 500, "Internal Server Error").end();
