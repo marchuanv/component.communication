@@ -22,21 +22,21 @@ module.exports = {
                 if(isPreflight){
                     return response.writeHead( 200, "Success", defaultHeaders ).end("");
                 }
-                let results = await delegate.call("component.request.handler.route", { 
+                let results = await delegate.call( { context: "component.request.handler.route" }, {
                     path: request.url, 
                     headers: request.headers, 
                     data: body, 
                     privatePort: options.privateHost, 
                     privatePort: options.privatePort
                 });
-                if (results.headers){
-                    delete results.headers["Content-Length"];
-                    results.headers["content-length"] = Buffer.byteLength(results.data || "");
-                }
-                if (results.error){
-                    response.writeHead( 500, "Internal Server Error").end();
+                const result = results.find(r => r.isError === false).result;
+                if (result && result.headers && result.statusMessage && result.statusCode){
+                    delete result.headers["Content-Length"];
+                    result.data = result.data || "";
+                    result.headers["content-length"] = Buffer.byteLength(result.data);
+                    response.writeHead( result.statusCode, result.statusMessage, result.headers).end(result.data);
                 } else {
-                    response.writeHead( results.statusCode, results.statusMessage, results.headers).end(results.data);
+                    response.writeHead( 500, "Internal Server Error").end();
                 }
             });
         });
