@@ -25,7 +25,8 @@ module.exports = {
                 let results = await delegate.call( { context: "component.request.handler.route" }, {
                     path: request.url, 
                     headers: request.headers, 
-                    data: body
+                    data: body,
+                    privatePort: options.privatePort
                 });
                 const result = results.find(r => r.isError === false).result;
                 if (result && result.headers && result.statusMessage && result.statusCode){
