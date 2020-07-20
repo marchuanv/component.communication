@@ -36,6 +36,9 @@ module.exports = {
                     privatePort: options.privateHost, 
                     privatePort: options.privatePort
                 });
+                if (results.headers){
+                    results.headers["content-length"] = Buffer.byteLength(results.data);
+                }
                 if (results.error){
                     response.writeHead( 500, "Internal Server Error").end();
                 } else {
