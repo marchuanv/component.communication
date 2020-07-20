@@ -22,13 +22,12 @@ module.exports = {
                 if(isPreflight){
                     return response.writeHead( 200, "Success", defaultHeaders ).end("");
                 }
-                let results = await delegate.call( { context: "component.request.handler.route" }, {
+                let result = await delegate.call( { context: "component.request.handler.route" }, {
                     path: request.url, 
                     headers: request.headers, 
                     data: body,
                     privatePort: options.privatePort
                 });
-                const result = results.find(r => r.isError === false).result;
                 if (result && result.headers && result.statusMessage && result.statusCode){
                     delete result.headers["Content-Length"];
                     result.data = result.data || "";
