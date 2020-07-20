@@ -22,7 +22,7 @@ module.exports = {
                 if(isPreflight){
                     return response.writeHead( 200, "Success", defaultHeaders ).end("");
                 }
-                let results = await delegate.call(module.parent.id, { 
+                let results = await delegate.call("component.request.handler.route", { 
                     path: request.url, 
                     headers: request.headers, 
                     data: body, 
