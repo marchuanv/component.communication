@@ -28,14 +28,23 @@ module.exports = {
                     data: body,
                     privatePort: options.privatePort
                 });
-                if (result && result.headers && result.statusMessage && result.statusCode){
+                if (!result){
+                    const statusMessage = "Not Found";
+                    result = { 
+                        headers: { "Content-Type":"text/plain" },
+                        statusCode: 404,
+                        statusMessage,
+                        data: statusMessage
+                    };
+                }
+                if (result && result.headers && result.statusMessage && result.statusCode ){
                     delete result.headers["Content-Length"];
                     result.data = result.data || "";
                     result.headers["content-length"] = Buffer.byteLength(result.data);
                     response.writeHead( result.statusCode, result.statusMessage, result.headers).end(result.data);
-                } else {
+                } else if (result && result.message && result.stack) {
                     response.writeHead( 500, "Internal Server Error").end();
-                }
+                } 
             });
         });
         if (options.privateHost){
