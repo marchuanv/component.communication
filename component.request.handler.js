@@ -28,15 +28,6 @@ module.exports = {
                     data: body,
                     privatePort: options.privatePort
                 });
-                if (!result){
-                    const statusMessage = "Not Found";
-                    result = { 
-                        headers: { "Content-Type":"text/plain" },
-                        statusCode: 404,
-                        statusMessage,
-                        data: statusMessage
-                    };
-                }
                 if (result && result.headers && result.statusMessage && result.statusCode ){
                     delete result.headers["Content-Length"];
                     result.data = result.data || "";
