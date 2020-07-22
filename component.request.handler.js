@@ -24,7 +24,8 @@ module.exports = {
                 if(isPreflight) {
                     return response.writeHead( 200, "Success", defaultHeaders ).end("");
                 }
-                let result = await delegate.call( { context: `component.request.handler.route.${options.publicPort}` }, {
+                const name = `${options.publicPort}${options.path}`;
+                let result = await delegate.call( { context: `component.request.handler.route`, name }, {
                     path: request.url,
                     headers: request.headers,
                     data: body,
