@@ -37,7 +37,7 @@ module.exports = {
                     result.headers["content-length"] = Buffer.byteLength(result.data);
                     response.writeHead( result.statusCode, result.statusMessage, result.headers).end(result.data);
                 } else {
-                    response.writeHead( 500, "Internal Server Error").end(result.message);
+                    response.writeHead( 500, "Internal Server Error").end( (result && result.message) || "Internal Server Error" );
                 }
             });
         });
