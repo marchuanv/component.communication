@@ -31,12 +31,20 @@ module.exports = {
                     publicHost: options.publicHost,
                     publicPort: options.publicPort
                 });
-                if (result && result.headers && result.statusMessage && result.statusCode){
+
+                if (!result){
+                    result.headers = { "content-type": "text/plain" };
+                    result.data = "callbacks did not return any results";
+                    result.statusCode = 200;
+                    result.statusMessage = "Success";
+                }
+
+                if (result.headers && result.statusMessage && result.statusCode){
                     delete result.headers["Content-Length"];
                     result.data = result.data || "";
                     result.headers["content-length"] = Buffer.byteLength(result.data);
                     response.writeHead( result.statusCode, result.statusMessage, result.headers).end(result.data);
-                } else {
+                } else if(result.message && result.stack) {
                     response.writeHead( 500, "Internal Server Error").end( (result && result.message) || "Internal Server Error" );
                 }
             });
