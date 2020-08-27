@@ -3,11 +3,19 @@ const delegate = require("component.delegate");
 const dns = require("dns");
 const logging = require("logging");
 logging.config.add("Request Handler");
+const host = http.createServer();
+
+process.on('SIGTERM', () => {
+  console.info('SIGTERM signal received.');
+  console.log('Closing http server.');
+  host.close(() => {
+    console.log('Http server closed.');
+  });
+});
 
 module.exports = {
     handle: async (options) => {
-        const host = http.createServer();
-        host.on("request", (request, response)=>{
+        host.on("request", (request, response) => {
             let body = '';
             request.on('data', chunk => {
                 body += chunk.toString();
