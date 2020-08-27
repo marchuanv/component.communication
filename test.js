@@ -1,5 +1,7 @@
 const requestHandler = require("./component.request.handler.js");
 
+const request = require("./component.request.js");
+
 const delegate = require("component.delegate");
 delegate.register("component.request.handler.route","route01",() => {
     //throw new Error("failure route 01");
