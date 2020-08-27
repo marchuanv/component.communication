@@ -1,3 +1,9 @@
 language: node_js
+cache:
+  npm: false
 node_js:
  - 12
+before_install:
+    - npm install . --only=dev
+install:
+    - npm install . --only=prod
