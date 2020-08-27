@@ -1,6 +1,6 @@
 const requestHandler = require("./component.request.handler.js");
 
-const request = require("./component.request.js");
+const request = require("component.request");
 
 const delegate = require("component.delegate");
 delegate.register("component.request.handler.route","route01",() => {
