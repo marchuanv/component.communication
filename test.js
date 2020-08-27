@@ -19,12 +19,15 @@ delegate.register("component.request.handler.route","route03",() => {
 });
 
 (async()=>{ 
+    
     requestHandler.handle({ privateHost: "localhost", privatePort: 3000});
     requestHandler.handle({ privateHost: "localhost", privatePort: 4000});
     requestHandler.handle({ privateHost: "localhost", privatePort: 5000});
     requestHandler.handle({ privateHost: "localhost", privatePort: 5000});
     
-    request.send({ host: "localhost", port: 3000, path: "/test", method: "GET", headers: {}, data: {}, retryCount: 1  });
+    await request.send({ host: "localhost", port: 3000, path: "/test", method: "GET", headers: {}, data: {}, retryCount: 1  });
+    
+    process.exit();
     
 })().catch((err)=>{
     console.error(err);
