@@ -67,12 +67,16 @@ module.exports = {
                 }
             });
         });
-        host.on("listening", () => {
-            logging.write("Request Handler", `listening on ${options.privateHost}:${options.privatePort}`);
-        });
+      
         if (options.privateHost){
+            host.on("listening", () => {
+              logging.write("Request Handler", `listening on ${options.privateHost}:${options.privatePort}`);
+            });
             await host.listen({ host: options.privateHost, port: options.privatePort });
         } else {
+            host.on("listening", () => {
+              logging.write("Request Handler", `listening on port: ${options.privatePort}`);
+            });
             await host.listen({ port: options.privatePort });
         }
     }
