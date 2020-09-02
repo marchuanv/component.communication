@@ -41,6 +41,7 @@ module.exports = {
                 });
 
                 if (!result){
+                    result = {};
                     result.headers = { "content-type": "text/plain" };
                     result.data = "callbacks did not return any results";
                     result.statusCode = 200;
