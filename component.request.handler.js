@@ -54,7 +54,7 @@ const registerHost = async (newHost) => {
                     return response.writeHead( 200, "Success", defaultHeaders ).end("");
                 }
                 const requestPort = host.address().port;
-                const portMapping = listeners.hosts.find(host => host.privatePort === requestPort);
+                const portMapping = listeners.hosts.find(host => host.publicPort === requestPort);
                 let result = await delegate.call( { context: `component.request.handler.route`, name: portMapping.privatePort }, {
                     path: request.url,
                     headers: request.headers,
