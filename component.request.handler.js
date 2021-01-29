@@ -3,18 +3,39 @@ const delegate = require("component.delegate");
 const dns = require("dns");
 const logging = require("logging");
 logging.config.add("Request Handler");
-const host = http.createServer();
+const utils = require("Utils");
 
-process.on('SIGTERM', () => {
-  console.info('SIGTERM signal received.');
-  console.log('Closing http server.');
-  host.close(() => {
-    console.log('Http server closed.');
-  });
-});
 
-module.exports = {
-    handle: async (options) => {
+let lock = undefined;
+const listeners = {
+    promises: [],
+    hosts: []
+};
+
+const registerHost = async (newHost) => {
+    if (lock){
+        setTimeout(async () => {
+            await registerHost(newHost);
+        },1000);
+        return;
+    } else {
+        lock = true;
+        if (listeners.hosts.find(h => 
+            h.privatePort === newHost.privatePort &&
+            h.publicPort === newHost.publicPort &&
+            h.publicHost === newHost.publicHost &&
+            h.privateHost === newHost.privateHost
+        )){
+            lock = false;
+            return;
+        }
+        const host = http.createServer();
+        if (newHost.privateHost){
+            await host.listen({ host: newHost.privateHost, port: newHost.privatePort });
+        } else {
+            await host.listen({ port: newHost.privatePort });
+        }
+
         host.on("request", (request, response) => {
             let body = '';
             request.on('data', chunk => {
@@ -32,14 +53,16 @@ module.exports = {
                 if(isPreflight) {
                     return response.writeHead( 200, "Success", defaultHeaders ).end("");
                 }
-                let result = await delegate.call( { context: `component.request.handler.route`, name: options.publicPort }, {
+                const requestPort = host.address().port;
+                const portMapping = listeners.hosts.find(host => host.privatePort === requestPort);
+                let result = await delegate.call( { context: `component.request.handler.route`, name: portMapping.privatePort }, {
                     path: request.url,
                     headers: request.headers,
                     data: body,
-                    publicHost: options.publicHost,
-                    publicPort: options.publicPort
+                    publicHost: portMapping.publicHost,
+                    publicPort: portMapping.publicPort
                 });
-
+        
                 if (!result){
                     result = {};
                     result.headers = { "content-type": "text/plain" };
@@ -47,7 +70,7 @@ module.exports = {
                     result.statusCode = 200;
                     result.statusMessage = "Success";
                 }
-
+        
                 if (result.headers && result.statusMessage && result.statusCode){
                     delete result.headers["Content-Length"];
                     result.data = result.data || "";
@@ -59,26 +82,45 @@ module.exports = {
             });
         });
         host.on("error", (hostError) => {
-            dns.lookup(options.privateHost, (dnsErr, ipAddress) => {
+            dns.lookup(newHost.privateHost, (dnsErr, ipAddress) => {
                 if (dnsErr){
                     throw dnsErr;
                 }
-                if (hostError.message !== `listen EADDRINUSE: address already in use ${ipAddress}:${options.privatePort}`){
+                if (hostError.message !== `listen EADDRINUSE: address already in use ${ipAddress}:${newHost.privatePort}`){
                     throw hostError;
                 }
             });
         });
-      
-        if (options.privateHost){
-            host.on("listening", () => {
-              logging.write("Request Handler", `listening on ${options.privateHost}:${options.privatePort}`);
-            });
-            await host.listen({ host: options.privateHost, port: options.privatePort });
-        } else {
-            host.on("listening", () => {
-              logging.write("Request Handler", `listening on port: ${options.privatePort}`);
-            });
-            await host.listen({ port: options.privatePort });
+        listeners.hosts.push(newHost);
+        logging.write("Request Handler", `listening on ${newHost.privateHost}:${newHost.privatePort}`);
+        lock = false;
+    }
+};
+
+process.on('SIGTERM', () => {
+  console.info('SIGTERM signal received.');
+  console.log('Closing http server.');
+  host.close(() => {
+    console.log('Http server closed.');
+  });
+});
+
+module.exports = {
+    handle: async (options) => {
+        const newHost = {
+            privateHost: options.privateHost,
+            publicHost: options.publicHost,
+            privatePort: options.privatePort,
+            publicPort: options.publicPort,
+        };
+        if (!newHost.privatePort){
+            const message = "no private port specified";
+            logging.write("Request Handler", message);
+            throw message;
         }
+        if (listeners.hosts.find(x => x.privatePort === newHost.privatePort)){
+            return;
+        }
+        await registerHost(newHost);
     }
 };

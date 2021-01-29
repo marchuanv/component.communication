@@ -1,12 +1,13 @@
+debugger;
 const requestHandler = require("./component.request.handler.js");
 
 const request = require("component.request");
 
 const delegate = require("component.delegate");
-delegate.register("component.request.handler.route","route01",() => {
-    //throw new Error("failure route 01");
+delegate.register("component.request.handler.route",3000,() => {
+    throw new Error("Error on port 3000");
 });
-delegate.register("component.request.handler.route","route02",() => {
+delegate.register("component.request.handler.route",4000,() => {
     return {
         headers: {"content-type":"text/plain"},
         data: "route 02",
@@ -14,8 +15,8 @@ delegate.register("component.request.handler.route","route02",() => {
         statusCode: 200
     };
 });
-delegate.register("component.request.handler.route","route03",() => {
-    //throw new Error("failure route 03");
+delegate.register("component.request.handler.route",5000,() => {
+    throw new Error("Error on port 5000");
 });
 
 (async()=>{ 
