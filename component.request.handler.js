@@ -54,19 +54,19 @@ const registerHost = async (newHost) => {
                     return response.writeHead( 200, "Success", defaultHeaders ).end("");
                 }
                 const requestPort = host.address().port;
-                const portMapping = listeners.hosts.find(host => host.publicPort === requestPort);
+                const route = listeners.hosts.find(host => host.publicPort === requestPort);
 
-                if (!portMapping){
+                if (!route){
                     response.writeHead( 400, "Bad Request").end("400 Bad Request");
                     return;
                 }
 
-                let result = await delegate.call( { context: `component.request.handler.route`, name: portMapping.privatePort }, {
+                let result = await delegate.call( { context: `component.request.handler.route`, name: route.privatePort }, {
                     path: request.url,
                     headers: request.headers,
                     data: body,
-                    publicHost: portMapping.publicHost,
-                    publicPort: portMapping.publicPort
+                    publicHost: route.publicHost,
+                    publicPort: route.publicPort
                 });
         
                 if (!result){
