@@ -3,8 +3,6 @@ const delegate = require("component.delegate");
 const dns = require("dns");
 const logging = require("logging");
 logging.config.add("Request Handler");
-const utils = require("Utils");
-
 
 let lock = undefined;
 const listeners = {
@@ -20,20 +18,15 @@ const registerHost = async (newHost) => {
         return;
     } else {
         lock = true;
-        if (listeners.hosts.find(h => 
-            h.privatePort === newHost.privatePort &&
-            h.publicPort === newHost.publicPort &&
-            h.publicHost === newHost.publicHost &&
-            h.privateHost === newHost.privateHost
-        )){
+        if (listeners.hosts.find(h => h.port === newHost.port && h.port)){
             lock = false;
             return;
         }
         const host = http.createServer();
-        if (newHost.privateHost){
-            await host.listen({ host: newHost.privateHost, port: newHost.privatePort });
+        if (newHost.host){
+            await host.listen({ host: newHost.host, port: newHost.port });
         } else {
-            await host.listen({ port: newHost.privatePort });
+            await host.listen({ port: newHost.port });
         }
 
         host.on("request", (request, response) => {
@@ -54,19 +47,17 @@ const registerHost = async (newHost) => {
                     return response.writeHead( 200, "Success", defaultHeaders ).end("");
                 }
                 const requestPort = host.address().port;
-                const route = listeners.hosts.find(host => host.publicPort === requestPort);
+                const route = listeners.hosts.find(h => h.port === requestPort);
 
                 if (!route){
                     response.writeHead( 400, "Bad Request").end("400 Bad Request");
                     return;
                 }
 
-                let result = await delegate.call( { context: `component.request.handler.route`, name: route.privatePort }, {
+                let result = await delegate.call( { context: `component.request.handler.route`, name: route.port }, {
                     path: request.url,
                     headers: request.headers,
-                    data: body,
-                    publicHost: route.publicHost,
-                    publicPort: route.publicPort
+                    data: body
                 });
         
                 if (!result){
@@ -92,13 +83,13 @@ const registerHost = async (newHost) => {
                 if (dnsErr){
                     throw dnsErr;
                 }
-                if (hostError.message !== `listen EADDRINUSE: address already in use ${ipAddress}:${newHost.privatePort}`){
+                if (hostError.message !== `listen EADDRINUSE: address already in use ${ipAddress}:${newHost.port}`){
                     throw hostError;
                 }
             });
         });
         listeners.hosts.push(newHost);
-        logging.write("Request Handler", `listening on ${newHost.privateHost}:${newHost.privatePort}`);
+        logging.write("Request Handler", `listening on ${newHost.privateHost}:${newHost.port}`);
         lock = false;
     }
 };
@@ -112,19 +103,14 @@ process.on('SIGTERM', () => {
 });
 
 module.exports = {
-    handle: async (options) => {
-        const newHost = {
-            privateHost: options.privateHost,
-            publicHost: options.publicHost,
-            privatePort: options.privatePort,
-            publicPort: options.publicPort,
-        };
-        if (!newHost.privatePort){
-            const message = "no private port specified";
+    handle: async ({host, port}) => {
+        const newHost = { host, port };
+        if (!newHost.port){
+            const message = "no port specified";
             logging.write("Request Handler", message);
             throw message;
         }
-        if (listeners.hosts.find(x => x.privatePort === newHost.privatePort)){
+        if (listeners.hosts.find(x => x.port === newHost.port)){
             return;
         }
         await registerHost(newHost);
