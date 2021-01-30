@@ -89,7 +89,7 @@ const registerHost = async (newHost) => {
             });
         });
         listeners.hosts.push(newHost);
-        logging.write("Request Handler", `listening on ${newHost.privateHost}:${newHost.port}`);
+        logging.write("Request Handler", `listening on ${newHost.host}:${newHost.port}`);
         lock = false;
     }
 };
