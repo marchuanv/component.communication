@@ -54,7 +54,7 @@ const registerHost = async (newHost) => {
                     return;
                 }
 
-                let result = await delegate.call( { context: `component.request.handler.route`, name: route.port }, {
+                let result = await delegate.call( { context: `component.request.handler.route`, wildcard: route.port }, {
                     path: request.url,
                     host: route.host,
                     port: route.port,

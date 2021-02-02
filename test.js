@@ -1,4 +1,4 @@
-debugger;
+
 const requestHandler = require("./component.request.handler.js");
 
 const request = require("component.request");
@@ -26,7 +26,9 @@ delegate.register("component.request.handler.route",5000,() => {
     requestHandler.handle({ host: "localhost", port: 5000 });
     requestHandler.handle({ host: "localhost", port: 5000 });
     
-    await request.send({ host: "localhost", port: 3000, path: "/test", method: "GET", headers: {}, data: {}, retryCount: 1  });
+    await request.send({ host: "localhost", port: 3000, path: "/test", method: "GET", headers: {}, data: "", retryCount: 1  });
+    await request.send({ host: "localhost", port: 4000, path: "/test", method: "GET", headers: {}, data: "", retryCount: 1  });
+    await request.send({ host: "localhost", port: 5000, path: "/test", method: "GET", headers: {}, data: "", retryCount: 1  });
     
     process.exit();
     
