@@ -1,6 +1,7 @@
 const http = require("http");
 const delegate = require("component.delegate");
 const dns = require("dns");
+const utils = require("utils");
 const logging = require("logging");
 logging.config.add("Request Handler");
 
@@ -59,7 +60,8 @@ const registerHost = async (newHost) => {
                     host: route.host,
                     port: route.port,
                     headers: request.headers,
-                    data: body
+                    data: body,
+                    id: utils.generateGUID()
                 });
         
                 if (!result){
