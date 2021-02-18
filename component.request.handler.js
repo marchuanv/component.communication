@@ -95,6 +95,10 @@ process.on('SIGTERM', () => {
 module.exports = {
     handle: async ({host, port}) => {
         const newHost = { host, port };
+        if (newHost.host){
+            newHost.host = newHost.host.replace(/\s/g, '');
+        }
+        newHost.port = Number(newHost.port);
         await registerHost(newHost);
     }
 };
