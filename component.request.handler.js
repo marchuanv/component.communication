@@ -25,9 +25,13 @@ const registerHost = async (newHost) => {
         }
         const host = http.createServer();
         if (newHost.host){
-            await host.listen({ host: newHost.host, port: newHost.port });
+            host.listen({ host: newHost.host, port: newHost.port },(err)=>{
+                logging.write("Request Handler", `listening on ${newHost.host}:${newHost.port}`);
+            });
         } else {
-            await host.listen({ port: newHost.port });
+            host.listen({ port: newHost.port },(err)=>{
+                logging.write("Request Handler", `listening on port ${newHost.port}`);
+            });
         }
 
         host.on("request", (request, response) => {
@@ -93,7 +97,7 @@ const registerHost = async (newHost) => {
             });
         });
         listeners.hosts.push(newHost);
-        logging.write("Request Handler", `listening on ${newHost.host}:${newHost.port}`);
+      
         lock = false;
     }
 };
