@@ -83,7 +83,7 @@ const registerHost = async (newHost) => {
             });
         });
         host.on("error", (hostError) => {
-            dns.lookup(newHost.privateHost, (dnsErr, ipAddress) => {
+            dns.lookup(newHost.host, (dnsErr, ipAddress) => {
                 if (dnsErr){
                     throw dnsErr;
                 }
