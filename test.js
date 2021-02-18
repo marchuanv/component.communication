@@ -25,12 +25,14 @@ delegate.register("component.request.handler.route",5000,() => {
     requestHandler.handle({ host: "localhost", port: 4000 });
     requestHandler.handle({ host: "localhost", port: 5000 });
     requestHandler.handle({ host: "localhost", port: 5000 });
+    requestHandler.handle({ host: "localhost", port: 443 });
+    requestHandler.handle({ host: "localhos", port: 6000 });
     
     await request.send({ host: "localhost", port: 3000, path: "/test", method: "GET", headers: {}, data: "", retryCount: 1  });
     await request.send({ host: "localhost", port: 4000, path: "/test", method: "GET", headers: {}, data: "", retryCount: 1  });
     await request.send({ host: "localhost", port: 5000, path: "/test", method: "GET", headers: {}, data: "", retryCount: 1  });
-    
-    process.exit();
+    await request.send({ host: "localhost", port: 443, path: "/test", method: "GET", headers: {}, data: "", retryCount: 1  });
+    await request.send({ host: "localhost", port: 6000, path: "/test", method: "GET", headers: {}, data: "", retryCount: 1  });
     
 })().catch((err)=>{
     console.error(err);

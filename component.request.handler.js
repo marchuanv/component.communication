@@ -24,15 +24,7 @@ const registerHost = async (newHost) => {
             return;
         }
         const host = http.createServer();
-        if (newHost.host){
-            host.listen({ host: newHost.host, port: newHost.port },(err)=>{
-                logging.write("Request Handler", `listening on ${newHost.host}:${newHost.port}`);
-            });
-        } else {
-            host.listen({ port: newHost.port },(err)=>{
-                logging.write("Request Handler", `listening on port ${newHost.port}`);
-            });
-        }
+        host.listen(newHost);
 
         host.on("request", (request, response) => {
             let body = '';
@@ -87,14 +79,21 @@ const registerHost = async (newHost) => {
             });
         });
         host.on("error", (hostError) => {
-            dns.lookup(newHost.host, (dnsErr, ipAddress) => {
-                if (dnsErr){
-                    throw dnsErr;
-                }
-                if (hostError.message !== `listen EADDRINUSE: address already in use ${ipAddress}:${newHost.port}`){
-                    throw hostError;
-                }
-            });
+            if (newHost.host){
+                dns.lookup(newHost.host, (dnsErr, ipAddress) => {
+                    if (dnsErr){
+                        return logging.write("Request Handler", dnsErr);
+                    }
+                    if (hostError.message !== `listen EADDRINUSE: address already in use ${ipAddress}:${newHost.port}`){
+                        return logging.write("Request Handler", dnsErr);
+                    }
+                });
+            } else {
+                return logging.write("Request Handler", hostError);
+            }
+        });
+        host.on("listening", () => {
+            logging.write("Request Handler", `listening on ${newHost.host}:${newHost.port}`);
         });
         listeners.hosts.push(newHost);
       
