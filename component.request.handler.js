@@ -93,10 +93,9 @@ const registerHost = async (newHost) => {
             }
         });
         host.on("listening", () => {
-            logging.write("Request Handler", `listening on ${newHost.host}:${newHost.port}`);
+            logging.write("Request Handler", `listening on ${JSON.stringify(newHost)}`);
         });
         listeners.hosts.push(newHost);
-      
         lock = false;
     }
 };
