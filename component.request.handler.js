@@ -1,9 +1,10 @@
 const http = require("http");
-const delegate = require("component.delegate");
 const dns = require("dns");
 const utils = require("utils");
-const logging = require("logging");
-logging.config.add("Request Handler");
+const delegate = require("component.delegate");
+const config = require("component.config");
+const logging = require("component.logging");
+
 let lock = undefined;
 
 const registerHost = async (newHost) => {

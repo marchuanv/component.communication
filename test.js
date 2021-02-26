@@ -1,7 +1,6 @@
 
 const requestHandler = require("./component.request.handler.js");
-
-const request = require("component.request");
+const unsecureRequest = require("component.request.unsecure");
 
 const delegate = require("component.delegate");
 delegate.register("component.request.handler.route",3000,() => {
@@ -28,11 +27,11 @@ delegate.register("component.request.handler.route",5000,() => {
     requestHandler.handle({ host: "localhost", port: 443 });
     requestHandler.handle({ host: "localhos", port: 6000 });
     
-    await request.send({ host: "localhost", port: 3000, path: "/test", method: "GET", headers: {}, data: "", retryCount: 1  });
-    await request.send({ host: "localhost", port: 4000, path: "/test", method: "GET", headers: {}, data: "", retryCount: 1  });
-    await request.send({ host: "localhost", port: 5000, path: "/test", method: "GET", headers: {}, data: "", retryCount: 1  });
-    await request.send({ host: "localhost", port: 443, path: "/test", method: "GET", headers: {}, data: "", retryCount: 1  });
-    await request.send({ host: "localhost", port: 6000, path: "/test", method: "GET", headers: {}, data: "", retryCount: 1  });
+    await unsecureRequest.send({ host: "localhost", port: 3000, path: "/test", method: "GET", headers: {}, data: "", retryCount: 1  });
+    await unsecureRequest.send({ host: "localhost", port: 4000, path: "/test", method: "GET", headers: {}, data: "", retryCount: 1  });
+    await unsecureRequest.send({ host: "localhost", port: 5000, path: "/test", method: "GET", headers: {}, data: "", retryCount: 1  });
+    await unsecureRequest.send({ host: "localhost", port: 443, path: "/test", method: "GET", headers: {}, data: "", retryCount: 1  });
+    await unsecureRequest.send({ host: "localhost", port: 6000, path: "/test", method: "GET", headers: {}, data: "", retryCount: 1  });
     
 })().catch((err)=>{
     console.error(err);
