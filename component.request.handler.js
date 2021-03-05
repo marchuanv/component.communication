@@ -3,7 +3,10 @@ const dns = require("dns");
 const utils = require("utils");
 const component = require("component");
 const delegate = require("component.delegate");
-const logging = component.require("component.logging");
+let logging;
+component.require("component.logging", { gitUsername: "marchuanv" } ).then((_logging)=>{
+    logging = _logging;
+});
 
 let lock = undefined;
 
