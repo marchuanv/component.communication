@@ -8,7 +8,7 @@ delegate.register("component.request.handler.route",3000,() => {
 });
 delegate.register("component.request.handler.route",4000,() => {
     return {
-        headers: {"content-type":"text/plain"},
+        headers: { "content-type":"text/plain" },
         data: "route 02",
         statusMessage: "Success",
         statusCode: 200

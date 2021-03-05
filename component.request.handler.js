@@ -1,9 +1,9 @@
 const http = require("http");
 const dns = require("dns");
 const utils = require("utils");
+const component = require("component");
 const delegate = require("component.delegate");
-const config = require("component.config");
-const logging = require("component.logging");
+const logging = component.require("component.logging");
 
 let lock = undefined;
 
