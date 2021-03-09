@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "module for handling most types of requests over a network",
   "main": "component.request.handler.js",
-  "hostname":"localhost",
+  "hostname": "localhost",
   "port": 3000,
   "engines": {
-    "node": "12.16.1",
-    "npm": "6.13.4"
+    "node": "14.12.0",
+    "npm": "6.14.8"
   },
   "scripts": {
     "test": "node test.js"
