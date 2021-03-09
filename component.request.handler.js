@@ -3,17 +3,12 @@ const dns = require("dns");
 const utils = require("utils");
 const component = require("component");
 const delegate = require("component.delegate");
-let logging;
-component.require("component.logging", { gitUsername: "marchuanv" } ).then((_logging)=>{
-    logging = _logging;
-});
 
 let lock = undefined;
-
-const registerHost = async (newHost) => {
+const registerHost = async (newHost, logging) => {
     if (lock){
         setTimeout(async () => {
-            await registerHost(newHost);
+            await registerHost(newHost, logging);
         },1000);
         return;
     } else {
@@ -89,20 +84,21 @@ const registerHost = async (newHost) => {
 };
 
 process.on('SIGTERM', () => {
-  console.info('SIGTERM signal received.');
-  console.log('Closing http server.');
-  host.close(() => {
-    console.log('Http server closed.');
-  });
+    console.info('SIGTERM signal received.');
+    console.log('Closing http server.');
+    host.close(() => {
+        console.log('Http server closed.');
+    });
 });
 
 module.exports = {
-    handle: async ({host, port}) => {
+    handle: async ({ host, port }) => {
+        const { componentLogging } = await component.require("component.logging", { gitUsername: "marchuanv" } );
         const newHost = { host, port };
         if (newHost.host){
             newHost.host = newHost.host.replace(/\s/g, '');
         }
         newHost.port = Number(newHost.port);
-        await registerHost(newHost);
+        await registerHost(newHost, componentLogging);
     }
 };
