@@ -23,7 +23,7 @@ const registerHost = async (newHost, logging) => {
                 body += chunk.toString();
             });
             request.on('end', async () => {
-                logging.write("Request Handler",`received request for ${request.url}`);
+                logging.write("component.request.handler.",`received request for ${request.url}`);
                 const defaultHeaders = {
                     "Access-Control-Allow-Origin": "*",
                     "Access-Control-Expose-Headers": "*",
@@ -67,17 +67,17 @@ const registerHost = async (newHost, logging) => {
             if (newHost.host){
                 dns.lookup(newHost.host, (dnsErr) => {
                     if (dnsErr){
-                        logging.write("Request Handler", dnsErr);
-                        return logging.write("Request Handler", `error hosting on ${JSON.stringify(newHost)}`);
+                        logging.write("component.request.handler.", dnsErr);
+                        return logging.write("component.request.handler.", `error hosting on ${JSON.stringify(newHost)}`);
                     }
                 });
             } else {
-                logging.write("Request Handler", hostError);
-                return logging.write("Request Handler", `error hosting on ${JSON.stringify(newHost)}`);
+                logging.write("component.request.handler.", hostError);
+                return logging.write("component.request.handler.", `error hosting on ${JSON.stringify(newHost)}`);
             }
         });
         host.on("listening", () => {
-            logging.write("Request Handler", `listening on ${JSON.stringify(newHost)}`);
+            logging.write("component.request.handler.", `listening on ${JSON.stringify(newHost)}`);
         });
         lock = false;
     }
