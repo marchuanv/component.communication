@@ -1,6 +1,6 @@
 (async()=>{ 
     
-    const requestHandler = require("./component.request.handler.js");
+    require("./component.request.handler.js");
     const com = require("component");
     const delegate = require("component.delegate");
 
@@ -18,13 +18,6 @@
     delegate.register({ context: "component.request.handler.route", name: 5000 },() => {
         throw new Error("Error on port 5000");
     });
-
-    await requestHandler.handle({ host: "localhost", port: 3000 });
-    await requestHandler.handle({ host: "localhost", port: 4000 });
-    await requestHandler.handle({ host: "localhost", port: 5000 });
-    await requestHandler.handle({ host: "localhost", port: 5000 });
-    await requestHandler.handle({ host: "localhost", port: 443 });
-    await requestHandler.handle({ host: "localhos", port: 6000 });
     
     const { componentRequestUnsecure } = await com.require("component.request.unsecure", {gitUsername:"marchuanv"});
     let results = await componentRequestUnsecure.send({ host: "localhost", port: 3000, path: "/test", method: "GET", headers: {}, data: "", retryCount: 1  });

@@ -91,14 +91,9 @@ process.on('SIGTERM', () => {
     });
 });
 
-module.exports = {
-    handle: async ({ host, port }) => {
-        const { componentLogging } = await component.require("component.logging", { gitUsername: "marchuanv" } );
-        const newHost = { host, port };
-        if (newHost.host){
-            newHost.host = newHost.host.replace(/\s/g, '');
-        }
-        newHost.port = Number(newHost.port);
-        await registerHost(newHost, componentLogging);
-    }
-};
+component.require("component.logging", { gitUsername: "marchuanv" } ).then(({ componentLogging })=>{
+    const newHost = { host: component.host, port: component.port };
+    registerHost(newHost, componentLogging);
+});
+
+module.exports = { };
