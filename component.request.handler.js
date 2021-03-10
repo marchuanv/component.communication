@@ -2,7 +2,6 @@ const http = require("http");
 const dns = require("dns");
 const utils = require("utils");
 const Component = require("component");
-const component = new Component("component.request.handler");
 
 let lock = undefined;
 const registerHost = async (newHost, logging) => {
@@ -91,7 +90,8 @@ process.on('SIGTERM', () => {
     });
 });
 
-component.require("component.logging", { gitUsername: "marchuanv" } ).then(async ({ componentLogging }) => {
+const component = new Component( { moduleName: "component", gitUsername: "marchuanv", parentModuleName: "component.request.handler" });
+component.ready().then( async () => {
     const package = require("./package.json");
     const newHost = { host: package.hostname, port: package.port };
     await registerHost(newHost, componentLogging);
