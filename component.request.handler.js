@@ -91,10 +91,10 @@ process.on('SIGTERM', () => {
     });
 });
 
-component.require("component.logging", { gitUsername: "marchuanv" } ).then(({ componentLogging })=>{
+component.require("component.logging", { gitUsername: "marchuanv" } ).then(async ({ componentLogging }) => {
     const package = require("./package.json");
     const newHost = { host: package.hostname, port: package.port };
-    registerHost(newHost, componentLogging);
+    await registerHost(newHost, componentLogging);
 });
 
 module.exports = { };
