@@ -2,12 +2,13 @@
     
     require("./component.request.handler.js");
     const com = require("component");
-    const delegate = require("component.delegate");
 
-    delegate.register({ context: "component.request.handler.route", name: 3000 },() => {
+    com.register("component.request.handler.route","component.request.handler");
+
+    com.delegate.register({ name: 3000 },() => {
         throw new Error("Error on port 3000");
     });
-    delegate.register({ context: "component.request.handler.route", name: 4000 },() => {
+    com.delegate.register({ name: 4000 },() => {
         return {
             headers: { "content-type":"text/plain" },
             data: "route 02",
@@ -15,7 +16,7 @@
             statusCode: 200
         };
     });
-    delegate.register({ context: "component.request.handler.route", name: 5000 },() => {
+    com.delegate.register({ name: 5000 },() => {
         throw new Error("Error on port 5000");
     });
     

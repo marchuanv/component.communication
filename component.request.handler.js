@@ -1,8 +1,8 @@
 const http = require("http");
 const dns = require("dns");
 const utils = require("utils");
-const component = require("component");
-const delegate = require("component.delegate");
+const Component = require("component");
+const component = new Component("component.request.handler");
 
 let lock = undefined;
 const registerHost = async (newHost, logging) => {
@@ -36,7 +36,7 @@ const registerHost = async (newHost, logging) => {
                     return response.writeHead( 200, "Success", defaultHeaders ).end("");
                 }
 
-                let result = await delegate.call( { context: `component.request.handler.route`, wildcard: newHost.port }, {
+                let result = await component.delegate.call( { wildcard: newHost.port }, {
                     path: request.url,
                     host: newHost.host,
                     port: newHost.port,
