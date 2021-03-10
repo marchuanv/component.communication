@@ -92,7 +92,8 @@ process.on('SIGTERM', () => {
 });
 
 component.require("component.logging", { gitUsername: "marchuanv" } ).then(({ componentLogging })=>{
-    const newHost = { host: component.host, port: component.port };
+    const package = require("./package.json");
+    const newHost = { host: package.hostname, port: package.port };
     registerHost(newHost, componentLogging);
 });
 
