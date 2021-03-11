@@ -6,7 +6,10 @@ let lock = undefined;
 
 ( async () => {
     await component.load({ moduleName: "component.logging", gitUsername: "marchuanv", parentModuleName: "component.request.handler" });
-    await component.load({ moduleName: "component.request.handler.route", gitUsername: "marchuanv" });
+    await component.register({
+        componentModule: module,
+        componentParentModuleName: "component.request.handler.route"
+    });
     const { componentLogging, componentRequestHandlerRoute } = component;
     const registerHost = async (newHost) => {
         if (lock){
