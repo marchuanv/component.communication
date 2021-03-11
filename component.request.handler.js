@@ -5,12 +5,9 @@ const component = require("component");
 let lock = undefined;
 
 ( async () => {
-    await component.load({ moduleName: "component.logging", gitUsername: "marchuanv", parentModuleName: "component.request.handler" });
-    await component.register({
-        componentModule: module,
-        componentParentModuleName: "component.request.handler.route"
-    });
-    const { componentLogging, componentRequestHandlerRoute } = component;
+    await component.load({ moduleName: "component.logging", gitUsername: "marchuanv" });
+    await component.register({ componentModule: module, componentParentModuleName: "component.request.handler.route" });
+    const { componentLogging } = component;
     const registerHost = async (newHost) => {
         if (lock){
             setTimeout(async () => {
@@ -42,7 +39,7 @@ let lock = undefined;
                         return response.writeHead( 200, "Success", defaultHeaders ).end("");
                     }
 
-                    let result = await componentRequestHandlerRoute.delegate.call( { wildcard: newHost.port }, {
+                    let result = await component.events.requestHandlerRoute.publish( { wildcard: newHost.port }, {
                         path: request.url,
                         host: newHost.host,
                         port: newHost.port,
