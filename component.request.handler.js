@@ -5,7 +5,7 @@ const component = require("component");
 let lock = undefined;
 
 ( async () => {
-    await component.load({ moduleName: "component.logging", gitUsername: "marchuanv" });
+    await component.load({ moduleName: "component.logging", gitUsername: "marchuanv", parentModuleName: "component.request.handler" });
     await component.load({ moduleName: "component.request.handler.route", gitUsername: "marchuanv" });
     const { componentLogging, componentRequestHandlerRoute } = component;
     const registerHost = async (newHost) => {
