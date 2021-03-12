@@ -4,8 +4,7 @@ const utils = require("utils");
 const component = require("component");
 let lock = undefined;
 
-( async () => {
-    await component.load({ moduleName: "component.logging", gitUsername: "marchuanv" });
+component.load({ moduleName: "component.logging", gitUsername: "marchuanv" }).then( async () => {
     await component.events.register({ componentModule: module, componentParentModuleName: "component.request.handler.route" });
     const { logging } = component;
     const registerHost = async (newHost) => {
@@ -88,7 +87,7 @@ let lock = undefined;
     const package = require("./package.json");
     const newHost = { host: package.hostname, port: package.port };
     registerHost(newHost);
-})();
+});
 
 process.on('SIGTERM', () => {
     console.info('SIGTERM signal received.');
