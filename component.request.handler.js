@@ -4,9 +4,8 @@ const utils = require("utils");
 const component = require("component");
 let lock = undefined;
 
-component.load({ moduleName: "component.logging", gitUsername: "marchuanv" }).then( async () => {
+component.load({ moduleName: "component.logging", gitUsername: "marchuanv" }).then( async ({ logging }) => {
     await component.events.register({ componentModule: module, componentParentModuleName: "component.request.handler.route" });
-    const { logging } = component;
     const registerHost = async (newHost) => {
         if (lock){
             setTimeout(async () => {
