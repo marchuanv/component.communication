@@ -7,7 +7,7 @@ let lock = undefined;
 ( async () => {
     await component.load({ moduleName: "component.logging", gitUsername: "marchuanv" });
     await component.events.register({ componentModule: module, componentParentModuleName: "component.request.handler.route" });
-    const { componentLogging } = component;
+    const { logging } = component;
     const registerHost = async (newHost) => {
         if (lock){
             setTimeout(async () => {
@@ -26,7 +26,7 @@ let lock = undefined;
                     body += chunk.toString();
                 });
                 request.on('end', async () => {
-                    componentLogging.write("component.request.handler",`received request for ${request.url}`);
+                    logging.write("component.request.handler",`received request for ${request.url}`);
                     const defaultHeaders = {
                         "Access-Control-Allow-Origin": "*",
                         "Access-Control-Expose-Headers": "*",
@@ -70,17 +70,17 @@ let lock = undefined;
                 if (newHost.host){
                     dns.lookup(newHost.host, (dnsErr) => {
                         if (dnsErr){
-                            componentLogging.write("component.request.handler", dnsErr);
-                            return componentLogging.write("component.request.handler", `error hosting on ${JSON.stringify(newHost)}`);
+                            logging.write("component.request.handler", dnsErr);
+                            return logging.write("component.request.handler", `error hosting on ${JSON.stringify(newHost)}`);
                         }
                     });
                 } else {
-                    componentLogging.write("component.request.handler", hostError);
-                    return componentLogging.write("component.request.handler", `error hosting on ${JSON.stringify(newHost)}`);
+                    logging.write("component.request.handler", hostError);
+                    return logging.write("component.request.handler", `error hosting on ${JSON.stringify(newHost)}`);
                 }
             });
             host.on("listening", () => {
-                componentLogging.write("component.request.handler", `listening on ${JSON.stringify(newHost)}`);
+                logging.write("component.request.handler", `listening on ${JSON.stringify(newHost)}`);
             });
             lock = false;
         }
