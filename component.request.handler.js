@@ -3,9 +3,9 @@ const dns = require("dns");
 const utils = require("utils");
 const component = require("component");
 let lock = undefined;
+component.events.register({ componentModule: module, componentParentModuleName: "component.request.handler.route" });
 
-component.load({ moduleName: "component.logging", gitUsername: "marchuanv" }).then( async ({ logging }) => {
-    await component.events.register({ componentModule: module, componentParentModuleName: "component.request.handler.route" });
+component.load({ moduleName: "component.logging" }).then( async ({ logging }) => {
     const registerHost = async (newHost) => {
         if (lock){
             setTimeout(async () => {
@@ -37,7 +37,7 @@ component.load({ moduleName: "component.logging", gitUsername: "marchuanv" }).th
                         return response.writeHead( 200, "Success", defaultHeaders ).end("");
                     }
 
-                    let result = await component.events.requestHandlerRoute.publish( { wildcard: newHost.port }, {
+                    let result = await component.events.requestHandler.publish( { wildcard: newHost.port }, {
                         path: request.url,
                         host: newHost.host,
                         port: newHost.port,
