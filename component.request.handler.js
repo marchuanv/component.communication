@@ -3,7 +3,7 @@ const dns = require("dns");
 const utils = require("utils");
 const component = require("component");
 let lock = undefined;
-component.events.register({ componentModule: module, componentParentModuleName: "component.request.handler.route" }).then(() => {
+component.events.register({ componentModule: module, componentParentModuleName: "component.request.handler.route" }).then(({ requestHandler }) => {
     const registerHost = async (newHost) => {
         if (lock){
             setTimeout(async () => {
@@ -22,7 +22,7 @@ component.events.register({ componentModule: module, componentParentModuleName: 
                     body += chunk.toString();
                 });
                 request.on('end', async () => {
-                    component.logging.write(`received request for ${request.url}`);
+                    requestHandler.log(`received request for ${request.url}`);
                     const defaultHeaders = {
                         "Access-Control-Allow-Origin": "*",
                         "Access-Control-Expose-Headers": "*",
@@ -35,7 +35,7 @@ component.events.register({ componentModule: module, componentParentModuleName: 
                         return response.writeHead( 200, "Success", defaultHeaders ).end("");
                     }
 
-                    let result = await component.events.requestHandler.publish( { wildcard: newHost.port }, {
+                    let result = await requestHandler.publish( { wildcard: newHost.port }, {
                         path: request.url,
                         host: newHost.host,
                         port: newHost.port,
@@ -66,17 +66,17 @@ component.events.register({ componentModule: module, componentParentModuleName: 
                 if (newHost.host){
                     dns.lookup(newHost.host, (dnsErr) => {
                         if (dnsErr){
-                            component.logging.write(dnsErr);
-                            return component.logging.write(`error hosting on ${JSON.stringify(newHost)}`);
+                            requestHandler.log(dnsErr);
+                            return requestHandler.log(`error hosting on ${JSON.stringify(newHost)}`);
                         }
                     });
                 } else {
-                    component.logging.write(hostError);
-                    return component.logging.write(`error hosting on ${JSON.stringify(newHost)}`);
+                    requestHandler.log(hostError);
+                    return requestHandler.log(`error hosting on ${JSON.stringify(newHost)}`);
                 }
             });
             host.on("listening", () => {
-                component.logging.write(`listening on ${JSON.stringify(newHost)}`);
+                requestHandler.log(`listening on ${JSON.stringify(newHost)}`);
             });
             lock = false;
         }
