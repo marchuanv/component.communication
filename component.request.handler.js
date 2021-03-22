@@ -2,33 +2,32 @@ const http = require("http");
 const dns = require("dns");
 const utils = require("utils");
 const component = require("component");
-let lock = undefined;
 component.register({ componentModule: module, componentParentModuleName: "component.request.handler.route" }).then(({ requestHandler }) => {
     const registerHost = async (newHost) => {
-        if (lock){
+        if (newHost.lock){
             setTimeout(async () => {
                 await registerHost(newHost);
             },1000);
             return;
         } else {
-            lock = true;
+            newHost.lock = true;
         
             const host = http.createServer();
             host.listen(newHost);
             
-            let portRequestLock = false;
             host.on("request", (request, response) => {
-                let body = '';
-                request.on('data', chunk => {
-                    body += chunk.toString();
-                });
-                request.on('end', async () => {
-                    const id = setInterval(()=>{
-                        if (portRequestLock){
-                            return;
-                        }
-                        portRequestLock = true;
-                        clearInterval(id);
+                const id = setInterval( async () => {
+                    if (newHost.lock){
+                        return;
+                    }
+                    newHost.lock = true;
+                    clearInterval(id);
+
+                    let body = '';
+                    request.on('data', chunk => {
+                        body += chunk.toString();
+                    });
+                    request.on('end', async () => {
                         requestHandler.log(`received request for ${request.url}`);
                         const defaultHeaders = {
                             "Access-Control-Allow-Origin": "*",
@@ -36,13 +35,11 @@ component.register({ componentModule: module, componentParentModuleName: "compon
                             "Access-Control-Allow-Headers": "*",
                             "Content-Type": "text/plain"
                         };
-    
                         const isPreflight = request.headers["access-control-request-headers"] !== undefined;
                         if(isPreflight) {
-                            portRequestLock = false;
+                            newHost.lock = false;
                             return response.writeHead( 200, "Success", defaultHeaders ).end("");
                         }
-    
                         let result = await requestHandler.publish( { wildcard: newHost.port }, {
                             path: request.url,
                             host: newHost.host,
@@ -68,9 +65,9 @@ component.register({ componentModule: module, componentParentModuleName: "compon
                         } else if(result.message && result.stack) {
                             response.writeHead( 500, "Internal Server Error").end( (result && result.message) || "Internal Server Error" );
                         }
-                        portRequestLock = false;
-                    },1000);
-                });
+                        newHost.lock = false;
+                    });
+                },1000);
             });
             host.on("error", (hostError) => {
                 if (newHost.host){
@@ -88,12 +85,11 @@ component.register({ componentModule: module, componentParentModuleName: "compon
             host.on("listening", () => {
                 requestHandler.log(`listening on ${JSON.stringify(newHost)}`);
             });
-            lock = false;
+            newHost.lock = false;
         }
     };
     const package = require("./package.json");
-    const newHost = { host: package.hostname, port: package.port };
-    registerHost(newHost);
+    registerHost({ host: package.hostname, port: package.port, lock: false });
 });
 
 process.on('SIGTERM', () => {
