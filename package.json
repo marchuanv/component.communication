@@ -1,11 +1,8 @@
 {
   "name": "component.request.handler",
-  "parentName": "component.request.handler.route",
   "version": "1.0.0",
   "description": "module for handling most types of requests over a network",
   "main": "component.request.handler.js",
-  "host": "localhost",
-  "port": 3000,
   "engines": {
     "node": "14.12.0",
     "npm": "6.14.8"
@@ -26,5 +23,10 @@
   "dependencies": {
     "component": "marchuanv/component",
     "utils": "marchuanv/utils"
+  },
+  "component": {  
+    "host": "localhost",
+    "port": 3000,
+    "parentName": "component.request.handler.route"
   }
 }
