@@ -2,6 +2,8 @@ const http = require("http");
 const dns = require("dns");
 const utils = require("utils");
 const component = require("component");
+const package = require("./package.json");
+
 component.register({ componentPackagePath: `${__dirname}/package.json` }).then(({ requestHandler }) => {
     const registerHost = async (newHost) => {
         if (newHost.lock){
@@ -88,7 +90,6 @@ component.register({ componentPackagePath: `${__dirname}/package.json` }).then((
             newHost.lock = false;
         }
     };
-    const package = require("./package.json");
     registerHost({ host: package.hostname, port: package.port, lock: false });
 });
 
