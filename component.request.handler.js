@@ -2,7 +2,7 @@ const http = require("http");
 const dns = require("dns");
 const utils = require("utils");
 const component = require("component");
-component.register({ componentModule: module, componentParentModuleName: "component.request.handler.route" }).then(({ requestHandler }) => {
+component.register({ componentPackagePath: `${__dirname}/package.json` }).then(({ requestHandler }) => {
     const registerHost = async (newHost) => {
         if (newHost.lock){
             setTimeout(async () => {
