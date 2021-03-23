@@ -2,27 +2,25 @@ const http = require("http");
 const dns = require("dns");
 const utils = require("utils");
 const component = require("component");
-const package = require("./package.json");
-
-component.register({ componentPackagePath: `${__dirname}/package.json` }).then(({ requestHandler }) => {
-    const registerHost = async (newHost) => {
-        if (newHost.lock){
+component.register({ componentPackagePath: `${__dirname}/package.json` }).then( async ({ requestHandler }) => {
+    const registerHost = async () => {
+        if (requestHandler.lock){
             setTimeout(async () => {
-                await registerHost(newHost);
+                await registerHost();
             },1000);
             return;
         } else {
-            newHost.lock = true;
+            requestHandler.lock = true;
         
             const host = http.createServer();
-            host.listen(newHost);
+            host.listen(requestHandler);
             
             host.on("request", (request, response) => {
                 const id = setInterval( async () => {
-                    if (newHost.lock){
+                    if (requestHandler.lock){
                         return;
                     }
-                    newHost.lock = true;
+                    requestHandler.lock = true;
                     clearInterval(id);
 
                     let body = '';
@@ -39,13 +37,13 @@ component.register({ componentPackagePath: `${__dirname}/package.json` }).then((
                         };
                         const isPreflight = request.headers["access-control-request-headers"] !== undefined;
                         if(isPreflight) {
-                            newHost.lock = false;
+                            requestHandler.lock = false;
                             return response.writeHead( 200, "Success", defaultHeaders ).end("");
                         }
-                        let result = await requestHandler.publish( { wildcard: newHost.port }, {
+                        let result = await requestHandler.publish( { wildcard: requestHandler.port }, {
                             path: request.url,
-                            host: newHost.host,
-                            port: newHost.port,
+                            host: requestHandler.host,
+                            port: requestHandler.port,
                             headers: request.headers,
                             data: body,
                             id: utils.generateGUID()
@@ -67,30 +65,30 @@ component.register({ componentPackagePath: `${__dirname}/package.json` }).then((
                         } else if(result.message && result.stack) {
                             response.writeHead( 500, "Internal Server Error").end( (result && result.message) || "Internal Server Error" );
                         }
-                        newHost.lock = false;
+                        requestHandler.lock = false;
                     });
                 },1000);
             });
             host.on("error", (hostError) => {
                 if (newHost.host){
-                    dns.lookup(newHost.host, (dnsErr) => {
+                    dns.lookup(requestHandler.host, (dnsErr) => {
                         if (dnsErr){
                             requestHandler.log(dnsErr);
-                            return requestHandler.log(`error hosting on ${JSON.stringify(newHost)}`);
+                            return requestHandler.log(`error hosting on ${requestHandler.host}:${requestHandler.port}`);
                         }
                     });
                 } else {
                     requestHandler.log(hostError);
-                    return requestHandler.log(`error hosting on ${JSON.stringify(newHost)}`);
+                    return requestHandler.log(`error hosting on ${requestHandler.host}:${requestHandler.port}`);
                 }
             });
             host.on("listening", () => {
-                requestHandler.log(`listening on ${JSON.stringify(newHost)}`);
+                requestHandler.log(`listening on ${requestHandler.host}:${requestHandler.port}`);
             });
-            newHost.lock = false;
+            requestHandler.lock = false;
         }
     };
-    registerHost({ host: package.hostname, port: package.port, lock: false });
+    await registerHost();
 });
 
 process.on('SIGTERM', () => {

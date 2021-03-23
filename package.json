@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "module for handling most types of requests over a network",
   "main": "component.request.handler.js",
-  "hostname": "localhost",
+  "host": "localhost",
   "port": 3000,
   "engines": {
     "node": "14.12.0",
