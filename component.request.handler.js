@@ -28,7 +28,7 @@ component.register({ moduleName: "component.request.handler" }).then( async ({ r
                         body += chunk.toString();
                     });
                     request.on('end', async () => {
-                        requestHandler.log(`received request for ${request.url}`);
+                        await requestHandler.log(`received request for ${request.url}`);
                         const defaultHeaders = {
                             "Access-Control-Allow-Origin": "*",
                             "Access-Control-Expose-Headers": "*",
@@ -71,21 +71,21 @@ component.register({ moduleName: "component.request.handler" }).then( async ({ r
                     });
                 },1000);
             });
-            host.on("error", (hostError) => {
+            host.on("error", async (hostError) => {
                 if (newHost.host){
-                    dns.lookup(requestHandler.host, (dnsErr) => {
+                    dns.lookup(requestHandler.host, async (dnsErr) => {
                         if (dnsErr){
-                            requestHandler.log(dnsErr);
-                            return requestHandler.log(`error hosting on ${requestHandler.host}:${requestHandler.port}`);
+                            await requestHandler.log(dnsErr);
+                            return await equestHandler.log(`error hosting on ${requestHandler.host}:${requestHandler.port}`);
                         }
                     });
                 } else {
-                    requestHandler.log(hostError);
-                    return requestHandler.log(`error hosting on ${requestHandler.host}:${requestHandler.port}`);
+                    await requestHandler.log(hostError);
+                    return await requestHandler.log(`error hosting on ${requestHandler.host}:${requestHandler.port}`);
                 }
             });
-            host.on("listening", () => {
-                requestHandler.log(`listening on ${requestHandler.host}:${requestHandler.port}`);
+            host.on("listening", async () => {
+                await requestHandler.log(`listening on ${requestHandler.host}:${requestHandler.port}`);
             });
             requestHandler.lock = false;
         }
