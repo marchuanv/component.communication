@@ -48,22 +48,24 @@ component.register({ moduleName: "component.request.handler" }).then( async ({ r
                             data: body,
                             id: utils.generateGUID()
                         });
-                
-                        if (!result){
-                            result = {};
-                            result.headers = { "content-type": "text/plain" };
-                            result.data = "callbacks did not return any results";
-                            result.statusCode = 200;
-                            result.statusMessage = "Success";
-                        }
-                
-                        if (result.headers && result.statusMessage && result.statusCode){
-                            delete result.headers["Content-Length"];
-                            result.data = result.data || "";
-                            result.headers["content-length"] = Buffer.byteLength(result.data);
-                            response.writeHead( result.statusCode, result.statusMessage, result.headers).end(result.data);
-                        } else if(result.message && result.stack) {
-                            response.writeHead( 500, "Internal Server Error").end( (result && result.message) || "Internal Server Error" );
+                        if (Array.isArray(result)){
+                            response.writeHead( 500, "Internal Server Error").end("more than one response returned.");
+                        } else {
+                            if (!result){
+                                result = {};
+                                result.headers = { "content-type": "text/plain" };
+                                result.data = "callbacks did not return any results";
+                                result.statusCode = 200;
+                                result.statusMessage = "Success";
+                            }
+                            if (result.headers && result.statusMessage && result.statusCode){
+                                delete result.headers["Content-Length"];
+                                result.data = result.data || "";
+                                result.headers["content-length"] = Buffer.byteLength(result.data);
+                                response.writeHead( result.statusCode, result.statusMessage, result.headers).end(result.data);
+                            } else if(result.message && result.stack) {
+                                response.writeHead( 500, "Internal Server Error").end(result.message);
+                            }
                         }
                         requestHandler.lock = false;
                     });
