@@ -41,6 +41,7 @@ component.register(module).then( async ({ requestHandler }) => {
                             return response.writeHead( 200, "Success", defaultHeaders ).end("");
                         }
                         let result = await requestHandler.publish( { channel: requestHandler.channel }, {
+                            path: request.url,
                             headers: request.headers,
                             requestId: utils.generateGUID(),
                             data: body
