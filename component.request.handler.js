@@ -40,13 +40,10 @@ component.register(module).then( async ({ requestHandler }) => {
                             requestHandler.lock = false;
                             return response.writeHead( 200, "Success", defaultHeaders ).end("");
                         }
-                        let result = await requestHandler.publish( { wildcard: requestHandler.port }, {
-                            path: request.url,
-                            host: requestHandler.host,
-                            port: requestHandler.port,
+                        let result = await requestHandler.publish( { channel: request.url }, {
                             headers: request.headers,
-                            data: body,
-                            id: utils.generateGUID()
+                            requestId: utils.generateGUID(),
+                            data: body
                         });
                         if (Array.isArray(result)){
                             response.writeHead( 500, "Internal Server Error").end("more than one response returned.");
