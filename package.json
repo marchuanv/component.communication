@@ -27,8 +27,8 @@
   "component": {  
     "host": "localhost",
     "port": 3000,
-    "parent": [
-      "component.request.handler.deferred"
+    "subscribers": [
+      { "moduleName": "component.request.handler.deferred" }
     ]
   }
 }
