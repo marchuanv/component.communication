@@ -29,6 +29,7 @@
     "port": 3000,
     "subscribers": [
       { "moduleName": "component.request.handler.deferred" }
-    ]
+    ],
+    "publishers": []
   }
 }
