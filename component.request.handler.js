@@ -40,7 +40,7 @@ component.register(module).then( async ({ requestHandler }) => {
                             requestHandler.lock = false;
                             return response.writeHead( 200, "Success", defaultHeaders ).end("");
                         }
-                        let result = await requestHandler.publish( { channel: request.url }, {
+                        let result = await requestHandler.publish( { channel: requestHandler.channel }, {
                             headers: request.headers,
                             requestId: utils.generateGUID(),
                             data: body
