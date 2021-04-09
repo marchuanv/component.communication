@@ -3,8 +3,7 @@ const dns = require("dns");
 const utils = require("utils");
 const component = require("component");
 
-component.register(module);
-component.on({eventName: "registered", moduleName: "component.request.handler" },({ requestHandler }) => {
+component.on({eventName: "moduleregistered" },({ requestHandler }) => {
     const registerHost = async () => {
         if (requestHandler.lock){
             setTimeout(async () => {
@@ -92,6 +91,7 @@ component.on({eventName: "registered", moduleName: "component.request.handler" }
     };
     await registerHost();
 });
+component.register(module);
 
 process.on('SIGTERM', () => {
     console.info('SIGTERM signal received.');
