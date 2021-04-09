@@ -3,7 +3,7 @@ const dns = require("dns");
 const utils = require("utils");
 const component = require("component");
 
-component.on({eventName: "moduleregistered" },({ requestHandler }) => {
+component.on({eventName: "moduleregistered" }, async ({ requestHandler }) => {
     const registerHost = async () => {
         if (requestHandler.lock){
             setTimeout(async () => {
