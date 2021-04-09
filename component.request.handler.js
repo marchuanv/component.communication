@@ -3,7 +3,7 @@ const dns = require("dns");
 const utils = require("utils");
 const component = require("component");
 
-component.on({eventName: "moduleregistered" }, async ({ requestHandler }) => {
+component.load(module).then(async ({ requestHandler }) => {
     const registerHost = async () => {
         if (requestHandler.lock){
             setTimeout(async () => {
@@ -41,7 +41,7 @@ component.on({eventName: "moduleregistered" }, async ({ requestHandler }) => {
                             requestHandler.lock = false;
                             return response.writeHead( 200, "Success", defaultHeaders ).end("");
                         }
-                        let result = await requestHandler.publish( { channel: requestHandler.channel }, {
+                        let result = await requestHandler.publish( { channel: requestHandler.config.channel }, {
                             path: request.url,
                             headers: request.headers,
                             requestId: utils.generateGUID(),
@@ -72,26 +72,25 @@ component.on({eventName: "moduleregistered" }, async ({ requestHandler }) => {
             });
             host.on("error", async (hostError) => {
                 if (newHost.host){
-                    dns.lookup(requestHandler.host, async (dnsErr) => {
+                    dns.lookup(requestHandler.config.host, async (dnsErr) => {
                         if (dnsErr){
                             await requestHandler.log(dnsErr);
-                            return await equestHandler.log(`error hosting on ${requestHandler.host}:${requestHandler.port}`);
+                            return await equestHandler.log(`error hosting on ${requestHandler.config.host}:${requestHandler.config.port}`);
                         }
                     });
                 } else {
                     await requestHandler.log(hostError);
-                    return await requestHandler.log(`error hosting on ${requestHandler.host}:${requestHandler.port}`);
+                    return await requestHandler.log(`error hosting on ${requestHandler.config.host}:${requestHandler.config.port}`);
                 }
             });
             host.on("listening", async () => {
-                await requestHandler.log(`listening on ${requestHandler.host}:${requestHandler.port}`);
+                await requestHandler.log(`listening on ${requestHandler.config.host}:${requestHandler.config.port}`);
             });
             requestHandler.lock = false;
         }
     };
     await registerHost();
 });
-component.register(module);
 
 process.on('SIGTERM', () => {
     console.info('SIGTERM signal received.');
