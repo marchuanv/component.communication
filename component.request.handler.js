@@ -14,7 +14,7 @@ component.load(module).then(async ({ requestHandler }) => {
             requestHandler.lock = true;
         
             const host = http.createServer();
-            host.listen(requestHandler);
+            host.listen(requestHandler.config);
             
             host.on("request", (request, response) => {
                 const id = setInterval( async () => {
