@@ -41,7 +41,7 @@ component.load(module).then(async ({ requestHandler }) => {
                             requestHandler.lock = false;
                             return response.writeHead( 200, "Success", defaultHeaders ).end("");
                         }
-                        let result = await requestHandler.notifyComponentDependencies({
+                        let result = await requestHandler.notifyDependantComponents({
                             host: requestHandler.config.host,
                             port: requestHandler.config.port,
                             path: request.url,
