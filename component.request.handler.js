@@ -41,12 +41,11 @@ component.load(module).then(async ({ requestHandler }) => {
                             requestHandler.lock = false;
                             return response.writeHead( 200, "Success", defaultHeaders ).end("");
                         }
-                        let result = await requestHandler.publish({
+                        let result = await requestHandler.notifyComponentDependencies({
                             host: requestHandler.config.host,
                             port: requestHandler.config.port,
                             path: request.url,
                             headers: request.headers,
-                            requestId: utils.generateGUID(),
                             data: body
                         });
                         if (Array.isArray(result)){
