@@ -53,8 +53,8 @@ component.load(module).then(async ({ requestHandler }) => {
                             const { headers, statusCode, statusMessage, data } = message;
                             if (headers && statusCode && statusMessage) {
                                 delete headers["Content-Length"];
-                                headers["content-length"] = Buffer.byteLength(data);
-                                response.writeHead(statusCode, statusMessage, headers).end(data);
+                                headers["content-length"] = Buffer.byteLength(data || "");
+                                response.writeHead(statusCode, statusMessage, headers).end(data || "");
                             } else {
                                 response.writeHead(500, "Internal Server Error", []).end(`${requestHandler.name} subscribers message does not have: { headers, statusCode, statusMessage }`);
                             }
