@@ -48,7 +48,7 @@ component.load(module).then(async ({ requestHandler }) => {
                             headers: request.headers,
                             data: body
                         });
-                        const { message } = subscribers.find(s => s.success); //First Successful Subscriber
+                        const { message } = subscribers.find(s => s.success) || {}; //First Successful Subscriber
                         if (message) {
                             const { headers, statusCode, statusMessage, data } = message;
                             delete headers["Content-Length"];
