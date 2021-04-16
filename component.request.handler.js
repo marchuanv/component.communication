@@ -51,9 +51,13 @@ component.load(module).then(async ({ requestHandler }) => {
                         const { message } = subscribers.find(s => s.success) || {}; //First Successful Subscriber
                         if (message) {
                             const { headers, statusCode, statusMessage, data } = message;
-                            delete headers["Content-Length"];
-                            headers["content-length"] = Buffer.byteLength(data);
-                            response.writeHead(statusCode, statusMessage, headers).end(data);
+                            if (headers && statusCode && statusMessage) {
+                                delete headers["Content-Length"];
+                                headers["content-length"] = Buffer.byteLength(data);
+                                response.writeHead(statusCode, statusMessage, headers).end(data);
+                            } else {
+                                response.writeHead(500, "Internal Server Error", []).end(`${requestHandler.name} subscribers did not respond with: { headers, statusCode, statusMessage }`);
+                            }
                         } else { //No Successful Subscribers
                             let reasons = [];
                             subscribers = subscribers.filter(s => !s.success);
