@@ -60,7 +60,8 @@ component.load(module).then(async ({ requestHandler }) => {
                             for(const subscriber of subscribers) {
                                 reasons = reasons.concat(subscriber.reasons);
                             };
-                            response.writeHead(500, "Internal Server Error").end(utils.getJSONString(reasons));
+                            const responseText = utils.getJSONString(reasons);
+                            response.writeHead(500, "Internal Server Error").end(responseText);
                         }
                         requestHandler.lock = false;
                     });
