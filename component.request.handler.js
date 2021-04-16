@@ -56,7 +56,7 @@ component.load(module).then(async ({ requestHandler }) => {
                                 headers["content-length"] = Buffer.byteLength(data);
                                 response.writeHead(statusCode, statusMessage, headers).end(data);
                             } else {
-                                response.writeHead(500, "Internal Server Error", []).end(`${requestHandler.name} subscribers did not respond with: { headers, statusCode, statusMessage }`);
+                                response.writeHead(500, "Internal Server Error", []).end(`${requestHandler.name} subscriber message does not have: { headers, statusCode, statusMessage }`);
                             }
                         } else { //No Successful Subscribers
                             let reasons = [];
