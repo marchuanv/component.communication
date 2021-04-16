@@ -48,12 +48,14 @@ component.load(module).then(async ({ requestHandler }) => {
                             headers: request.headers,
                             data: body
                         });
-                        if (!message.headers){
-                            message.headers = {};
-                        }
-                        delete message.headers["content-length"];
-                        message.headers["Content-Length"] = Buffer.byteLength(message.text || "");
-                        response.writeHead( message.statusCode, message.statusMessage, message.headers ).end(message.text || "");
+                        const { headers, statusCode, statusMessage, text } = message;
+                        headers = headers || {};
+                        statusCode = statusCode || 500;
+                        statusMessage = statusMessage || "Internal Server Error";
+                        text = text || "";
+                        delete headers["content-length"];
+                        headers["Content-Length"] = Buffer.byteLength(text);
+                        response.writeHead(statusCode, statusMessage, headers ).end(text);
                         requestHandler.lock = false;
                     });
                 },1000);
