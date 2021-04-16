@@ -48,7 +48,7 @@ component.load(module).then(async ({ requestHandler }) => {
                             headers: request.headers,
                             data: body
                         });
-                        let { headers, statusCode, statusMessage, text } = message;
+                        let { headers, statusCode, statusMessage, text } = message || {};
                         headers = headers || {};
                         statusCode = statusCode || 500;
                         statusMessage = statusMessage || "Internal Server Error";
