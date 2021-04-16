@@ -55,8 +55,11 @@ component.load(module).then(async ({ requestHandler }) => {
                             headers["content-length"] = Buffer.byteLength(data);
                             response.writeHead(statusCode, statusMessage, headers).end(data);
                         } else { //No Successful Subscribers
-                            const reasons = [];
-                            subscribers.filter(s => !s.success).forEach(s => reasons.concat(s.reasons));
+                            let reasons = [];
+                            subscribers = subscribers.filter(s => !s.success);
+                            for(const subscriber of subscribers) {
+                                reasons = reasons.concat(subscriber.reasons);
+                            };
                             response.writeHead(500, "Internal Server Error").end(utils.getJSONString(reasons));
                         }
                         requestHandler.lock = false;
