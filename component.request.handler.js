@@ -41,32 +41,20 @@ component.load(module).then(async ({ requestHandler }) => {
                             requestHandler.lock = false;
                             return response.writeHead( 200, "Success", defaultHeaders ).end("");
                         }
-                        let subscribers = await requestHandler.publish({
+                        let subscriber = await requestHandler.publish({
                             host: requestHandler.config.host,
                             port: requestHandler.config.port,
                             path: request.url,
                             headers: request.headers,
                             data: body
                         });
-                        const { message } = subscribers.find(s => s.success) || {}; //First Successful Subscriber
-                        if (message) {
-                            const { headers, statusCode, statusMessage, data } = message;
-                            if (headers && statusCode && statusMessage) {
-                                delete headers["Content-Length"];
-                                headers["content-length"] = Buffer.byteLength(data || "");
-                                response.writeHead(statusCode, statusMessage, headers).end(data || "");
-                            } else {
-                                response.writeHead(500, "Internal Server Error", []).end(`${requestHandler.name} subscribers message does not have: { headers, statusCode, statusMessage }`);
-                            }
-                        } else { //No Successful Subscribers
-                            let reasons = [];
-                            subscribers = subscribers.filter(s => !s.success);
-                            for(const subscriber of subscribers) {
-                                reasons = reasons.concat(subscriber.reasons);
-                            };
-                            const responseText = utils.getJSONString(reasons);
-                            response.writeHead(500, "Internal Server Error").end(responseText);
+                        const { message } = subscriber;
+                        if (!message.headers){
+                            message.headers = {};
                         }
+                        delete message.headers["content-length"];
+                        message.headers["Content-Length"] = Buffer.byteLength(message.text || "");
+                        response.writeHead( message.statusCode, message.statusMessage, message.headers ).end(message.text || "");
                         requestHandler.lock = false;
                     });
                 },1000);
