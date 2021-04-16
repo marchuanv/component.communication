@@ -41,14 +41,13 @@ component.load(module).then(async ({ requestHandler }) => {
                             requestHandler.lock = false;
                             return response.writeHead( 200, "Success", defaultHeaders ).end("");
                         }
-                        let subscriber = await requestHandler.publish({
+                        let { message } = await requestHandler.publish({
                             host: requestHandler.config.host,
                             port: requestHandler.config.port,
                             path: request.url,
                             headers: request.headers,
                             data: body
                         });
-                        const { message } = subscriber;
                         if (!message.headers){
                             message.headers = {};
                         }
