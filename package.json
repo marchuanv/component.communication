@@ -1,8 +1,8 @@
 {
-  "name": "component.request.handler",
+  "name": "component.communication",
   "version": "1.0.0",
-  "description": "module for handling most types of requests over a network",
-  "main": "component.request.handler.js",
+  "description": "module for sending and receiving data over a network",
+  "main": "component.communication.js",
   "engines": {
     "node": "14.12.0",
     "npm": "6.14.8"
@@ -12,22 +12,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/marchuanv/component.request.handler.git"
+    "url": "git+https://github.com/marchuanv/component.communication.git"
   },
   "author": "Marchuan Van Der Merwe",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/marchuanv/component.request.handler/issues"
+    "url": "https://github.com/marchuanv/component.communication/issues"
   },
-  "homepage": "https://github.com/marchuanv/component.request.handler#readme",
+  "homepage": "https://github.com/marchuanv/component.communication#readme",
   "dependencies": {
-    "component": "marchuanv/component",
     "utils": "marchuanv/utils"
-  },
-  "component": {  
-    "host": "localhost",
-    "port": 3000,
-    "channel": 3000,
-    "dependencies": []
   }
 }

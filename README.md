@@ -1,1 +1,1 @@
-# HTTP Handler
+component.communication
