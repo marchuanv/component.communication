@@ -21,7 +21,6 @@
   },
   "homepage": "https://github.com/marchuanv/component.communication#readme",
   "dependencies": {
-    "utils": "marchuanv/utils",
     "component.logging": "marchuanv/component.logging"
   },
   "component": {
