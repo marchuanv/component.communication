@@ -21,6 +21,11 @@
   },
   "homepage": "https://github.com/marchuanv/component.communication#readme",
   "dependencies": {
-    "utils": "marchuanv/utils"
+    "utils": "marchuanv/utils",
+    "component.logging": "marchuanv/component.logging"
+  },
+  "component": {
+    "host":"localhost",
+    "port": 3000
   }
 }
