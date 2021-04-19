@@ -1,5 +1,4 @@
-const { Communication } = require("./lib/communication.js");
-const { CommunicationMessage } = require("./lib/communication.message.js");
+const { CommunicationMessage, Communication } = require("./lib/communication.js");
 process.on('SIGTERM', () => {
     console.info('SIGTERM signal received.');
     console.log('Closing http server.');
