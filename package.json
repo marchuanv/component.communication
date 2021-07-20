@@ -25,7 +25,7 @@
     "utils": "marchuanv/utils"
   },
   "component": {
-    "host":"localhost",
+    "host": "localhost",
     "port": 3000
   }
 }
