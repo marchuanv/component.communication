@@ -23,9 +23,5 @@
   "dependencies": {
     "component.logging": "marchuanv/component.logging",
     "utils": "marchuanv/utils"
-  },
-  "component": {
-    "host": "localhost",
-    "port": 3000
   }
 }
