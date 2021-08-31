@@ -1,2 +1,0 @@
-const { CommunicationIncomingMessage, CommunicationOutgoingMessage, CommunicationResponseMessage, Communication, CommunicationStatus } = require("./lib/communication.js");
-module.exports = { CommunicationIncomingMessage, CommunicationOutgoingMessage, CommunicationResponseMessage, Communication, CommunicationStatus };

@@ -2,13 +2,13 @@
   "name": "component.communication",
   "version": "1.0.0",
   "description": "module for sending and receiving data over a network",
-  "main": "component.communication.js",
+  "main": "initialise.js",
   "engines": {
     "node": "14.12.0",
     "npm": "6.14.8"
   },
   "scripts": {
-    "test": "node test.js"
+    "test": "node specs/specs.js"
   },
   "repository": {
     "type": "git",
