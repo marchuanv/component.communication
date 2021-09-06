@@ -1,10 +1,10 @@
 (async() => {
-    const { Communication, CommunicationRequestHandler } = require("./initialise.js");
-    const comm = new Communication({ host: "localhost", port: 3000 });
-    const callback = new CommunicationRequestHandler({ priority: "High", callback: () => {
+    const { Connection, RequestHandler } = require("./initialise.js");
+    const connection = new Connection({ host: "localhost", port: 3000 });
+    const callback = new RequestHandler({ priority: "High", callback: () => {
         console.log("handled");
     }});
-    await comm.handle(callback);
-    await comm.start();
+    await connection.handle(callback);
+    await connection.start();
 })();
 

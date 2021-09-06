@@ -1,1 +1,1 @@
-module.exports = require("./lib/communication.js");
+module.exports = require("./lib/connection.js");
