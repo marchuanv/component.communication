@@ -1,8 +1,6 @@
 (async() => {
     await require("./lib/message.spec.js");
     await require("./lib/http/httpmessage.spec.js");
-    // await require("./lib/http/httprequestmessage.spec.js")
-    // await require("./lib/http/httprequesthandler.spec.js");
-
+    await require("./lib/http/httprequestmessage.spec.js");
 })();
 
