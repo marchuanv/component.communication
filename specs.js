@@ -1,6 +1,7 @@
 (async() => {
 
-    await require("./lib/http/httpmessagefactory.spec.js");
+    await require("./lib/messagefactory.spec.js");
+    // await require("./lib/http/httpmessagefactory.spec.js");
 
 
     // await require("./lib/message.spec.js");
