@@ -1,27 +1,36 @@
 {
   "name": "component.communication",
-  "version": "1.0.0",
   "description": "module for sending and receiving data over a network",
-  "main": "initialise.js",
+  "version": "1.0.0",
+  "author": "Marchuan Van Der Merwe",
+  "type": "module",
+  "main": "main.mjs",
+  "license": "LGPL-3.0-or-later",
   "engines": {
     "node": "14.12.0",
     "npm": "6.14.8"
   },
+  "keywords": [
+    "http",
+    "communication",
+    "network"
+  ],
+  "files": [
+    "lib"
+  ],
   "scripts": {
-    "test": "node specs.js"
+    "test": "node specs/index.mjs"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/marchuanv/component.communication.git"
   },
-  "author": "Marchuan Van Der Merwe",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/marchuanv/component.communication/issues"
   },
   "homepage": "https://github.com/marchuanv/component.communication#readme",
   "dependencies": {
-    "component.logging": "marchuanv/component.logging",
-    "utils": "marchuanv/utils"
+    "utils": "marchuanv/utils",
+    "jasmine": "^5.1.0"
   }
 }
