@@ -3,24 +3,25 @@ const suite = describe('when creating a connection given successful', () => {
     it('should send a message and receive a success message', (done) => {
         const connectionOptions = new ConnectionOptions(3, 10000, 'localhost', 8080, 'localhost', 8080);
         const connection = new Connection(connectionOptions);
+        const messageId = 'ca064ae2-dc0c-40ea-ae95-a83934e32bfc';
         const message = {
             headers: {},
             body: {
-                Id: '1234565',
+                Id: messageId,
                 data: 'Hello World'
             }
         };
         const expectedClientMessage = {
             headers: {},
             body: {
-                Id: message.Id,
+                Id: messageId,
                 data: 'Hello World'
             }
         };
         const expectedServerMessage = {
             headers: {},
             body: {
-                Id: message.Id,
+                Id: messageId,
                 data: 'message received and is valid'
             }
         };
