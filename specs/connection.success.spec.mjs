@@ -1,6 +1,6 @@
 import { Connection, ConnectionOptions } from '../lib/registry.mjs';
-const suite = describe('when creating a connection', () => {
-    it('should send an http request', async () => {
+const suite = describe('when creating a connection given successful', () => {
+    it('should send a message and receive a success message', async () => {
         const connectionOptions = new ConnectionOptions(3, 10000, 'localhost', 8080, 'localhost', 8080);
         const connection = new Connection(connectionOptions);
         const isOpen = await connection.open();
