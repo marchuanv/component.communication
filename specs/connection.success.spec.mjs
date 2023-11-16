@@ -1,6 +1,6 @@
 import { Connection, ConnectionOptions } from '../lib/registry.mjs';
 const suite = describe('when creating a connection given successful', () => {
-    it('should send multiple messages and receive multiple messages', (done) => {
+    it('should send multiple messages and receive multiple messages', async () => {
         const connectionOptions = new ConnectionOptions(3, 10000, 'localhost', 8080, 'localhost', 8080);
         const connection = new Connection(connectionOptions);
         const message1Id = 'ca064ae2-dc0c-40ea-ae95-a83934e32bfc';
@@ -28,7 +28,7 @@ const suite = describe('when creating a connection given successful', () => {
             }
         };
         const message2Id = '6c0e1b03-ca39-483f-9e93-3c6077626dda';
-        const message2ClientData = 'Hello World';
+        const message2ClientData = 'Hello World Again';
         const message2ServerData = 'message received and is valid';
         const message2 = {
             headers: {},
@@ -51,35 +51,51 @@ const suite = describe('when creating a connection given successful', () => {
                 data: message2ServerData
             }
         };
-        let count = 1;
-        const _sendReceive = () => {
-            let messageToSend = message1;
-            let expectedClientMessage = expectedClientMessage1;
-            let expectedServerMessage = expectedServerMessage1;
-            if (count > 1) {
-                messageToSend = message2;
-                expectedClientMessage = expectedClientMessage2;
-                expectedServerMessage = expectedServerMessage2;
-            }
-            connection.receive().then(({ clientMessage, serverMessage }) => {
-                if (clientMessage) {
-                    expect(JSON.stringify(clientMessage.body)).toBe(JSON.stringify(expectedServerMessage.body));
-                } else if (serverMessage) {
-                    expect(JSON.stringify(serverMessage.body)).toBe(JSON.stringify(expectedClientMessage.body));
-                }
-                if (count === 2) {
-                    done();
-                } else {
-                    count = count + 1;
-                    setTimeout(_sendReceive, 1000);
+        let count = 0;
+        const promise = new Promise((resolve, reject) => {
+
+            connection.receive().then(({ serverMessage }) => {
+                count = count + 1;
+                expect(JSON.stringify(serverMessage.body)).toBe(JSON.stringify(expectedClientMessage1.body));
+                if (count === 4) {
+                    resolve();
                 }
             }).catch((error) => {
-                fail(error);
-                done();
+                reject(error);
             });
-            connection.send(messageToSend);
-        };
-        _sendReceive();
+            connection.receive().then(({ serverMessage }) => {
+                count = count + 1;
+                expect(JSON.stringify(serverMessage.body)).toBe(JSON.stringify(expectedClientMessage2.body));
+                if (count === 4) {
+                    resolve();
+                }
+            }).catch((error) => {
+                reject(error);
+            });
+
+            connection.receive().then(({ clientMessage }) => {
+                count = count + 1;
+                expect(JSON.stringify(clientMessage.body)).toBe(JSON.stringify(expectedServerMessage1.body));
+                if (count === 4) {
+                    resolve();
+                }
+            }).catch((error) => {
+                reject(error);
+            });
+            connection.receive().then(({ clientMessage }) => {
+                count = count + 1;
+                expect(JSON.stringify(clientMessage.body)).toBe(JSON.stringify(expectedServerMessage2.body));
+                if (count === 4) {
+                    resolve();
+                }
+            }).catch((error) => {
+                reject(error);
+            });
+
+            connection.send(message1);
+            connection.send(message2);
+        });
+        await promise;
     });
 });
 process.specs.set(suite, []);
