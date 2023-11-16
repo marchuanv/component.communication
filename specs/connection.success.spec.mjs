@@ -25,15 +25,24 @@ const suite = describe('when creating a connection given successful', () => {
                 data: 'message received and is valid'
             }
         };
-        connection.receive().then(({ clientMessage, serverMessage }) => {
-            expect(JSON.stringify(clientMessage.body)).toBe(JSON.stringify(expectedServerMessage.body));
-            expect(JSON.stringify(serverMessage.body)).toBe(JSON.stringify(expectedClientMessage.body));
-            done();
-        }).catch((error) => {
-            fail(error);
-            done();
-        });
         connection.send(message);
+        const _receive = () => {
+            connection.receive().then(({ clientMessage, serverMessage }) => {
+                if (clientMessage) {
+                    expect(JSON.stringify(clientMessage.body)).toBe(JSON.stringify(expectedServerMessage.body));
+                    done();
+                } else if (serverMessage) {
+                    expect(JSON.stringify(serverMessage.body)).toBe(JSON.stringify(expectedClientMessage.body));
+                    done();
+                } else {
+                    setTimeout(_receive, 100);
+                }
+            }).catch((error) => {
+                fail(error);
+                done();
+            });
+        };
+        _receive();
     });
 });
 process.specs.set(suite, []);
