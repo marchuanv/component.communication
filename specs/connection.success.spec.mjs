@@ -1,5 +1,12 @@
 import { Connection, ConnectionOptions } from '../lib/registry.mjs';
 const suite = describe('when creating a connection given successful', () => {
+    it('should support multiple connections', async () => {
+        const connectionOptions = new ConnectionOptions(3, 10000, 'localhost', 8080, 'localhost', 8080);
+        const connection1 = new Connection(connectionOptions);
+        const connection2 = new Connection(connectionOptions);
+        connection1.receive();
+        connection2.receive();
+    });
     it('should send multiple messages and receive multiple messages', async () => {
         const connectionOptions = new ConnectionOptions(3, 10000, 'localhost', 8080, 'localhost', 8080);
         const connection = new Connection(connectionOptions);
