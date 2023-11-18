@@ -1,13 +1,15 @@
-import { Connection } from '../lib/registry.mjs';
+import { Connection, HttpConnection } from '../lib/registry.mjs';
 const suite = describe('when creating a connection given successful', () => {
     it('should support multiple connections', async () => {
-        const connection1 = new Connection(process.connectionOptions);
-        const connection2 = new Connection(process.connectionOptions);
+        const httpConnection = new HttpConnection(process.connectionOptions);
+        const connection1 = new Connection(httpConnection);
+        const connection2 = new Connection(httpConnection);
         connection1.receive();
         connection2.receive();
     });
     it('should send multiple messages and receive multiple messages', async () => {
-        const connection = new Connection(process.connectionOptions);
+        const httpConnection = new HttpConnection(process.connectionOptions);
+        const connection = new Connection(httpConnection);
         const message1Id = 'ca064ae2-dc0c-40ea-ae95-a83934e32bfc';
         const message1ClientData = 'Hello World';
         const message1ServerData = 'message received and is valid';
