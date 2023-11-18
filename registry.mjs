@@ -1,5 +1,5 @@
 import dns from 'node:dns';
-
+export { Jasmine } from 'jasmine';
 export { EventEmitter } from 'events';
 export { randomUUID } from 'node:crypto';
 export { IncomingMessage, ServerResponse, createServer, request } from 'node:http';
