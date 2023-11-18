@@ -1,4 +1,4 @@
-import { Connection, HttpConnection } from '../lib/registry.mjs';
+import { Connection, HttpConnection } from '../registry.mjs';
 const suite = describe('when creating a connection given successful', () => {
     it('should support multiple connections', async () => {
         const httpConnection = new HttpConnection(process.connectionOptions);
