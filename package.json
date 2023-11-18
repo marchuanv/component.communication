@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/marchuanv/component.communication#readme",
   "dependencies": {
-    "utils": "marchuanv/component.properties",
+    "component.properties": "marchuanv/component.properties",
     "jasmine": "^5.1.0"
   }
 }
