@@ -1,5 +1,5 @@
 
-import { ConnectionOptions, Jasmine } from '../registry.mjs';
+import { ConnectionOptions, Jasmine, url } from '../registry.mjs';
 process.specs = new WeakMap();
 const projectBaseDir = url.fileURLToPath(new URL('./', import.meta.url));
 const jasmine = new Jasmine({ projectBaseDir });
