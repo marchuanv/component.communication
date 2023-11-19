@@ -3,4 +3,3 @@ const suite = describe('when creating a connection given failure', () => {
         fail('not implemented');
     });
 });
-process.specs.set(suite, []);

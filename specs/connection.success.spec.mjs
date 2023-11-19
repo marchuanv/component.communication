@@ -105,4 +105,3 @@ const suite = describe('when creating a connection given successful', () => {
         await promise;
     });
 });
-process.specs.set(suite, []);

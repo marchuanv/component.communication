@@ -1,5 +1,6 @@
 import dns from 'node:dns';
 import Jasmine from 'jasmine';
+import { Specs } from 'utils'
 export { EventEmitter } from 'events';
 export { randomUUID } from 'node:crypto';
 export * as url from 'url';
@@ -12,4 +13,5 @@ export { ContentType } from './lib/content.type.mjs';
 export { HttpConnection } from './lib/http/http.connection.mjs';
 export { dns };
 export { Jasmine }
+export { Specs }
 
