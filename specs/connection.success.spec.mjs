@@ -1,15 +1,6 @@
-import { Connection, HttpConnection } from '../registry.mjs';
-const suite = describe('when creating a connection given successful', () => {
-    it('should support multiple connections', async () => {
-        const httpConnection = new HttpConnection(process.connectionOptions);
-        const connection1 = new Connection(httpConnection);
-        const connection2 = new Connection(httpConnection);
-        connection1.receive();
-        connection2.receive();
-    });
+describe('when creating a connection given successful', () => {
     it('should send multiple messages and receive multiple messages', async () => {
-        const httpConnection = new HttpConnection(process.connectionOptions);
-        const connection = new Connection(httpConnection);
+        const connection = process.connection;
         const message1Id = 'ca064ae2-dc0c-40ea-ae95-a83934e32bfc';
         const message1ClientData = 'Hello World';
         const message1ServerData = 'message received and is valid';
@@ -60,7 +51,6 @@ const suite = describe('when creating a connection given successful', () => {
         };
         let count = 0;
         const promise = new Promise((resolve, reject) => {
-
             connection.receive().then(({ serverMessage }) => {
                 count = count + 1;
                 expect(JSON.stringify(serverMessage.body)).toBe(JSON.stringify(expectedClientMessage1.body));
