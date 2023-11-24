@@ -33,42 +33,34 @@ describe('when sending multiple messages given a connection was created', () => 
         };
         let count = 0;
         const promise = new Promise((resolve, reject) => {
-            connection.receive().then(({ serverMessage }) => {
+            connection.receive().then((message) => {
                 count = count + 1;
-                expect(JSON.stringify(serverMessage.data)).toBe(JSON.stringify(expectedClientMessage1.data));
+                expect(JSON.stringify(message.data)).toBe(JSON.stringify(expectedClientMessage1.data));
                 if (count === 4) {
                     resolve();
                 }
-            }).catch((error) => {
-                reject(error);
-            });
-            connection.receive().then(({ serverMessage }) => {
+            }).catch(reject);
+            connection.receive().then((message) => {
                 count = count + 1;
-                expect(JSON.stringify(serverMessage.data)).toBe(JSON.stringify(expectedClientMessage2.data));
+                expect(JSON.stringify(message.data)).toBe(JSON.stringify(expectedClientMessage2.data));
                 if (count === 4) {
                     resolve();
                 }
-            }).catch((error) => {
-                reject(error);
-            });
-            connection.receive().then(({ clientMessage }) => {
+            }).catch(reject);
+            connection.receive().then((message) => {
                 count = count + 1;
-                expect(JSON.stringify(clientMessage.data)).toBe(JSON.stringify(expectedServerMessage1.data));
+                expect(JSON.stringify(message.data)).toBe(JSON.stringify(expectedServerMessage1.data));
                 if (count === 4) {
                     resolve();
                 }
-            }).catch((error) => {
-                reject(error);
-            });
-            connection.receive().then(({ clientMessage }) => {
+            }).catch(reject);
+            connection.receive().then((message) => {
                 count = count + 1;
-                expect(JSON.stringify(clientMessage.data)).toBe(JSON.stringify(expectedServerMessage2.data));
+                expect(JSON.stringify(message.data)).toBe(JSON.stringify(expectedServerMessage2.data));
                 if (count === 4) {
                     resolve();
                 }
-            }).catch((error) => {
-                reject(error);
-            });
+            }).catch(reject);
             connection.send(message1);
             connection.send(message2);
         });
