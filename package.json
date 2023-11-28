@@ -30,6 +30,7 @@
   },
   "homepage": "https://github.com/marchuanv/component.communication#readme",
   "dependencies": {
+    "@hyperjump/json-schema": "^1.6.5",
     "component.properties": "marchuanv/component.properties",
     "jasmine": "^5.1.0"
   }
