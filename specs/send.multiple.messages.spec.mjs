@@ -1,14 +1,16 @@
+import { Connection, ConnectionOptions, HttpConnection, Message } from "../registry.mjs";
+
 describe('when sending multiple messages given a connection was created', () => {
     it('should send and receive multiple messages', async () => {
-        const connection = process.connection;
 
         let identifier = 'ca064ae2-dc0c-40ea-ae95-a83934e32bfc';
         const message1ClientData = 'Hello World';
         const message1ServerData = 'message received and is valid';
-        const message1 = {
-            headers: { identifier },
-            data: message1ClientData
-        };
+
+        const message1 = new Message();
+        message1.headers = { identifier };
+        message1.data - message1ClientData;
+
         const expectedRequestMessage1 = {
             headers: { identifier },
             data: message1ClientData
@@ -20,10 +22,11 @@ describe('when sending multiple messages given a connection was created', () => 
         identifier = '6c0e1b03-ca39-483f-9e93-3c6077626dda';
         const message2ClientData = 'Hello World Again';
         const message2ServerData = 'message received and is valid';
-        const message2 = {
-            headers: { identifier },
-            data: message2ClientData
-        };
+
+        const message2 = new Message();
+        message2.headers = { identifier };
+        message2.data - message2ClientData;
+
         const expectedRequestMessage2 = {
             headers: { identifier },
             data: message2ClientData
@@ -33,6 +36,9 @@ describe('when sending multiple messages given a connection was created', () => 
             data: message2ServerData
         };
         let count = 0;
+        const connectionOptions = new ConnectionOptions(new GUID(), 3, 10000, 'localhost', 8080, 'localhost', 8080);
+        const httpConnection = new HttpConnection(new GUID(), connectionOptions);
+        const connection = new Connection(new GUID(), httpConnection);
         const promise = new Promise((resolve, reject) => {
             connection.receive().then((message) => {
                 count = count + 1;

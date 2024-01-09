@@ -10,5 +10,6 @@ export { Connection } from './lib/connection.mjs';
 export { ConnectionOptions } from './lib/connection.options.mjs';
 export { ContentType } from './lib/content.type.mjs';
 export { HttpConnection } from './lib/http/http.connection.mjs';
+export { Message } from './lib/message.mjs';
 export { GUID, Jasmine, MemberParameter, Specs, dns, general };
 
