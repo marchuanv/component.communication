@@ -1,5 +1,5 @@
 describe('when sending multiple messages given a connection was created', () => {
-    fit('should send and receive multiple messages', async () => {
+    it('should send and receive multiple messages', async () => {
         const connection = process.connection;
 
         let identifier = 'ca064ae2-dc0c-40ea-ae95-a83934e32bfc';
