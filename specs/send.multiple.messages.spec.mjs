@@ -1,4 +1,4 @@
-import { Connection, ConnectionOptions, HttpConnection, Message } from "../registry.mjs";
+import { Connection, ConnectionOptions, GUID, HttpConnection, Message } from "../registry.mjs";
 
 describe('when sending multiple messages given a connection was created', () => {
     it('should send and receive multiple messages', async () => {
@@ -7,9 +7,8 @@ describe('when sending multiple messages given a connection was created', () => 
         const message1ClientData = 'Hello World';
         const message1ServerData = 'message received and is valid';
 
-        const message1 = new Message();
+        const message1 = new Message(message1ClientData);
         message1.headers = { identifier };
-        message1.data - message1ClientData;
 
         const expectedRequestMessage1 = {
             headers: { identifier },
@@ -23,9 +22,8 @@ describe('when sending multiple messages given a connection was created', () => 
         const message2ClientData = 'Hello World Again';
         const message2ServerData = 'message received and is valid';
 
-        const message2 = new Message();
+        const message2 = new Message(message2ClientData);
         message2.headers = { identifier };
-        message2.data - message2ClientData;
 
         const expectedRequestMessage2 = {
             headers: { identifier },
