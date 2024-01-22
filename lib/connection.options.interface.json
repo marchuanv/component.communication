@@ -1,0 +1,80 @@
+{
+    "ConnectionOptions": {
+        "className": "ConnectionOptions",
+        "Id": "5cf2884b-94b9-4ef4-9647-6548d3c8978d",
+        "classFilePath": "./connection.options.mjs",
+        "extend": {},
+        "ctor": {
+            "parameters": {
+                "Id": {
+                    "type": {
+                        "$refId": "82103ca0-7285-4136-b61d-d9b2846687a7"
+                    }
+                },
+                "maxRetryCount": {
+                    "type": {
+                        "$refId": "36320378-ccc5-4c38-8425-50950c5ff61d"
+                    }
+                },
+                "timeoutMilli": {
+                    "type": {
+                        "$refId": "36320378-ccc5-4c38-8425-50950c5ff61d"
+                    }
+                },
+                "hostName": {
+                    "type": {
+                        "$refId": "68c86ae1-f150-41d2-a01e-7bb439ec6e29"
+                    }
+                },
+                "hostPort": {
+                    "type": {
+                        "$refId": "36320378-ccc5-4c38-8425-50950c5ff61d"
+                    }
+                },
+                "remoteHostName": {
+                    "type": {
+                        "$refId": "68c86ae1-f150-41d2-a01e-7bb439ec6e29"
+                    }
+                },
+                "remoteHostPort": {
+                    "type": {
+                        "$refId": "36320378-ccc5-4c38-8425-50950c5ff61d"
+                    }
+                }
+            }
+        },
+        "methods": {},
+        "properties": {
+            "maxRetryCount": {
+                "type": {
+                    "$refId": "36320378-ccc5-4c38-8425-50950c5ff61d"
+                }
+            },
+            "timeoutMilli": {
+                "type": {
+                    "$refId": "36320378-ccc5-4c38-8425-50950c5ff61d"
+                }
+            },
+            "hostName": {
+                "type": {
+                    "$refId": "68c86ae1-f150-41d2-a01e-7bb439ec6e29"
+                }
+            },
+            "hostPort": {
+                "type": {
+                    "$refId": "36320378-ccc5-4c38-8425-50950c5ff61d"
+                }
+            },
+            "remoteHostName": {
+                "type": {
+                    "$refId": "68c86ae1-f150-41d2-a01e-7bb439ec6e29"
+                }
+            },
+            "remoteHostPort": {
+                "type": {
+                    "$refId": "36320378-ccc5-4c38-8425-50950c5ff61d"
+                }
+            }
+        }
+    }
+}
