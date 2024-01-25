@@ -1,4 +1,4 @@
-import { Connection, ConnectionOptions, GUID, HttpConnection, Message } from "../registry.mjs";
+import { Connection, ConnectionCtorArgs, ConnectionOptions, ConnectionOptionsCtorArgs, HttpConnection, HttpConnectionCtorArgs, Message, MessageCtorArgs } from "../registry.mjs";
 
 describe('when sending multiple messages given a connection was created', () => {
     it('should send and receive multiple messages', async () => {
@@ -7,7 +7,10 @@ describe('when sending multiple messages given a connection was created', () => 
         const message1ClientData = 'Hello World';
         const message1ServerData = 'message received and is valid';
 
-        const message1 = new Message(message1ClientData);
+        const message1CtorArgs = new MessageCtorArgs();
+        message1CtorArgs.data = message1ClientData;
+
+        const message1 = new Message(message1CtorArgs);
         message1.headers = { identifier };
 
         const expectedRequestMessage1 = {
@@ -22,7 +25,9 @@ describe('when sending multiple messages given a connection was created', () => 
         const message2ClientData = 'Hello World Again';
         const message2ServerData = 'message received and is valid';
 
-        const message2 = new Message(message2ClientData);
+        const message2CtorArgs = new MessageCtorArgs();
+        message2CtorArgs.data = message2ClientData;
+        const message2 = new Message(message2CtorArgs);
         message2.headers = { identifier };
 
         const expectedRequestMessage2 = {
@@ -34,14 +39,30 @@ describe('when sending multiple messages given a connection was created', () => 
             data: message2ServerData
         };
         let count = 0;
-        const connectionOptions = new ConnectionOptions(new GUID(), 3, 10000, 'localhost', 8080, 'localhost', 8080);
-        const httpConnection = new HttpConnection(new GUID(), connectionOptions);
-        const connection = new Connection(new GUID(), httpConnection);
+
+        const connectionOptionsArgs = new ConnectionOptionsCtorArgs();
+        connectionOptionsArgs.maxRetryCount = 3;
+        connectionOptionsArgs.timeoutMilli = 10000;
+        connectionOptionsArgs.hostName = 'localhost';
+        connectionOptionsArgs.hostPort = 8080;
+        connectionOptionsArgs.remoteHostName = 'localhost';
+        connectionOptionsArgs.remoteHostPort = 8080;
+        const connectionOptions = new ConnectionOptions(connectionOptionsArgs);
+
+        const httpConnectionArgs = new HttpConnectionCtorArgs();
+        httpConnectionArgs.connectionOptions = connectionOptions;
+        const httpConnection = new HttpConnection(httpConnectionArgs);
+
+        const connectionArgs = new ConnectionCtorArgs();
+        connectionArgs.connection = httpConnection;
+        connectionArgs.connectionOptions = connectionOptions;
+        const connection = new Connection(connectionArgs);
+
         const promise = new Promise((resolve, reject) => {
             connection.receive().then((message) => {
                 count = count + 1;
                 const { requestid, responseid } = message.headers;
-                const isClientSide = (requestid === responseid) ? true: false;
+                const isClientSide = (requestid === responseid) ? true : false;
                 if (isClientSide) {
                     throw new Error('expected server message');
                 }
@@ -50,7 +71,7 @@ describe('when sending multiple messages given a connection was created', () => 
             connection.receive().then((message) => {
                 count = count + 1;
                 const { requestid, responseid } = message.headers;
-                const isClientSide = (requestid === responseid) ? true: false;
+                const isClientSide = (requestid === responseid) ? true : false;
                 if (isClientSide) {
                     throw new Error('expected server message');
                 }
@@ -59,7 +80,7 @@ describe('when sending multiple messages given a connection was created', () => 
             connection.receive().then((message) => {
                 count = count + 1;
                 const { requestid, responseid } = message.headers;
-                const isClientSide = (requestid === responseid) ? true: false;
+                const isClientSide = (requestid === responseid) ? true : false;
                 if (!isClientSide) {
                     throw new Error('expected client message');
                 }
@@ -68,7 +89,7 @@ describe('when sending multiple messages given a connection was created', () => 
             connection.receive().then((message) => {
                 count = count + 1;
                 const { requestid, responseid } = message.headers;
-                const isClientSide = (requestid === responseid) ? true: false;
+                const isClientSide = (requestid === responseid) ? true : false;
                 if (!isClientSide) {
                     throw new Error('expected client message');
                 }
